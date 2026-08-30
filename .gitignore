@@ -1,0 +1,21 @@
+# Allowlist: ignore everything, un-ignore only portable config.
+*
+
+!.gitignore
+!README.md
+!SETUP.md
+
+!CLAUDE.md
+!settings.json
+!statusline-command.sh
+
+!commands/
+!commands/**
+
+!skills/
+!skills/**
+
+# Never track, even if a broad "!" rule is added above.
+.credentials.json
+daemon/control.key
+sessions/*.key

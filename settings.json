@@ -1,0 +1,110 @@
+{
+  "env": {
+    "BASH_MAX_OUTPUT_LENGTH": "150000"
+  },
+  "permissions": {
+    "allow": [
+      "mcp__codegraph__*",
+      "Bash(rtk read *)",
+      "Bash(rtk grep *)"
+    ],
+    "deny": [
+      "Read(node_modules/**)",
+      "Read(.nuxt/**)",
+      "Read(.output/**)",
+      "Read(dist/**)",
+      "Read(.data/**)",
+      "Read(.cache/**)",
+      "Grep(node_modules/**)",
+      "Grep(.nuxt/**)",
+      "Grep(.output/**)",
+      "Grep(dist/**)",
+      "Grep(.data/**)",
+      "Grep(.cache/**)"
+    ]
+  },
+  "model": "fable",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codegraph prompt-hook"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rtk hook claude"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "caveman@caveman": true,
+    "superpowers@superpowers-dev": true,
+    "claude-mem@thedotmack": true,
+    "impeccable@impeccable": true,
+    "ui-ux-pro-max@ui-ux-pro-max-skill": true,
+    "taste-skill@taste-skill": true,
+    "watermarks-remover@watermarks-remover": true
+  },
+  "extraKnownMarketplaces": {
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    },
+    "superpowers-dev": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers"
+      }
+    },
+    "thedotmack": {
+      "source": {
+        "source": "github",
+        "repo": "thedotmack/claude-mem"
+      }
+    },
+    "impeccable": {
+      "source": {
+        "source": "github",
+        "repo": "pbakaus/impeccable"
+      }
+    },
+    "ui-ux-pro-max-skill": {
+      "source": {
+        "source": "github",
+        "repo": "nextlevelbuilder/ui-ux-pro-max-skill"
+      }
+    },
+    "taste-skill": {
+      "source": {
+        "source": "github",
+        "repo": "Leonxlnx/taste-skill"
+      }
+    },
+    "watermarks-remover": {
+      "source": {
+        "source": "github",
+        "repo": "guillaumemeyer/watermarks-remover"
+      }
+    }
+  },
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+  "autocompactPercentageOverride": 75
+}
