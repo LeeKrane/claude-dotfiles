@@ -15,7 +15,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 
 ## settings.json
 
-- `env`: `BASH_MAX_OUTPUT_LENGTH=150000`
+- `env`: `BASH_MAX_OUTPUT_LENGTH=150000`, `WATERMARKS_HOOK_MODE=clean` (read by the watermarks-remover plugin)
 - `permissions.allow`: `mcp__codegraph__*`, `Bash(rtk read *)`, `Bash(rtk grep *)`
 - `permissions.deny`: Read/Grep on `node_modules/`, `.nuxt/`, `.output/`, `dist/`, `.data/`, `.cache/`
 - `model`: `fable`
@@ -40,7 +40,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 | `impeccable@impeccable` | pbakaus/impeccable | Design fluency for frontend dev (polish, audit, critique) |
 | `ui-ux-pro-max@ui-ux-pro-max-skill` | nextlevelbuilder/ui-ux-pro-max-skill | UI/UX design intelligence: styles, palettes, fonts, charts |
 | `taste-skill@taste-skill` | Leonxlnx/taste-skill | Frontend design taste skills (brutalist, minimalist, soft, ...) |
-| `watermarks-remover@watermarks-remover` | guillaumemeyer/watermarks-remover | Removes AI provenance marks from generated files |
+| `watermarks-remover@watermarks-remover` | guillaumemeyer/watermarks-remover | Removes AI provenance marks from generated files. On install it writes `WATERMARKS_HOOK_MODE` into `settings.json` and leaves a `settings.json.bak-wm` backup |
 
 `enabledPlugins` and `extraKnownMarketplaces` in `settings.json` declare these; installation itself is not versioned (see `SETUP.md`).
 
@@ -70,3 +70,5 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 ## Not tracked
 
 Session and project transcripts, caches, daemon state, the plugin install cache, `plans/`, and secrets (`.credentials.json`, daemon/session keys) are never committed. `.gitignore` is an allowlist, so any new runtime file stays ignored by default.
+
+The `autoMode` block (auto-mode environment context, incl. trusted repos) is per-machine and intentionally not versioned. `settings.local.json` and `settings.json.bak*` are never tracked.

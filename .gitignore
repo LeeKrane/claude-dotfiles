@@ -19,3 +19,5 @@
 .credentials.json
 daemon/control.key
 sessions/*.key
+settings.local.json
+settings.json.bak*

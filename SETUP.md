@@ -70,6 +70,8 @@ claude plugin install watermarks-remover@watermarks-remover
 
 Verify: `claude plugin list` shows all 7 enabled.
 
+Note: watermarks-remover patches `settings.json` on install (adds `env.WATERMARKS_HOOK_MODE`, writes a `settings.json.bak-wm` backup). The key is already tracked, so there should be no diff. If `git -C ~/.claude status --short` shows `settings.json` modified afterwards, inspect the diff; discard with `git -C ~/.claude checkout -- settings.json` unless the change is wanted. `settings.json.bak-wm` is gitignored and can be deleted.
+
 ## 7. Verify
 
 ```
@@ -83,3 +85,4 @@ Then start `claude` in any directory and confirm:
 - statusline renders
 - `/cleanup`, `/council`, `/context-audit` appear in the slash-command list
 - `git -C ~/.claude status --short` is empty
+- `autoMode` is not tracked; run auto-mode setup on this machine if you want it
