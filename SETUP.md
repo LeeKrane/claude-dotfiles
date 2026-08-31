@@ -83,7 +83,7 @@ claude plugin list
 Then start `claude` in any directory and confirm:
 
 - statusline renders
-- `/cleanup`, `/council`, `/context-audit` appear in the slash-command list
+- `/cleanup-session-codebase`, `/cleanup-whole-codebase`, `/council`, `/context-audit` appear in the slash-command list
 - `git -C ~/.claude status --short` is empty
 - `autoMode` is not tracked; run auto-mode setup on this machine if you want it
 

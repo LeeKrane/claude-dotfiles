@@ -9,7 +9,8 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 | `CLAUDE.md` | Global instructions loaded into every session |
 | `settings.json` | Permissions, hooks, model, statusline, plugins |
 | `statusline-command.sh` | Statusline script (model, context fill, rate limits) |
-| `commands/cleanup.md` | `/cleanup` slash command |
+| `commands/cleanup-session-codebase.md` | `/cleanup-session-codebase` slash command |
+| `commands/cleanup-whole-codebase.md` | `/cleanup-whole-codebase` slash command |
 | `commands/dotfiles-apply.md` | `/dotfiles-apply` slash command |
 | `commands/dotfiles-release.md` | `/dotfiles-release` slash command |
 | `skills/context-audit/` | `context-audit` skill |
@@ -57,7 +58,8 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 
 ## Skills & commands
 
-- `/cleanup` — reviews the session's diff and removes dead code, debug logging, and orphaned files/tests.
+- `/cleanup-session-codebase` — reviews the session's diff and removes dead code, debug logging, and orphaned files/tests; double-checks every finding before deleting.
+- `/cleanup-whole-codebase` — same cleanup across the entire repo, not just the session's diff; double-checks every finding before deleting.
 - `/dotfiles-apply` — after a `git pull`, brings this machine up to date with any pending `CHANGELOG.md` versions.
 - `/dotfiles-release` — after editing this repo, bumps the version, drafts a `CHANGELOG.md` entry, and commits (never pushes).
 - `context-audit` — audits Claude Code settings, CLAUDE.md, and skills for token waste; returns a health score.
