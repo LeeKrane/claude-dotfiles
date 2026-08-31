@@ -10,8 +10,11 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 | `settings.json` | Permissions, hooks, model, statusline, plugins |
 | `statusline-command.sh` | Statusline script (model, context fill, rate limits) |
 | `commands/cleanup.md` | `/cleanup` slash command |
+| `commands/dotfiles-apply.md` | `/dotfiles-apply` slash command |
+| `commands/dotfiles-release.md` | `/dotfiles-release` slash command |
 | `skills/context-audit/` | `context-audit` skill |
 | `skills/council/` | `council` skill (+ `personas/`, `templates/`) |
+| `CHANGELOG.md` | Integer-versioned changelog for this repo |
 
 ## settings.json
 
@@ -55,8 +58,19 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 ## Skills & commands
 
 - `/cleanup` — reviews the session's diff and removes dead code, debug logging, and orphaned files/tests.
+- `/dotfiles-apply` — after a `git pull`, brings this machine up to date with any pending `CHANGELOG.md` versions.
+- `/dotfiles-release` — after editing this repo, bumps the version, drafts a `CHANGELOG.md` entry, and commits (never pushes).
 - `context-audit` — audits Claude Code settings, CLAUDE.md, and skills for token waste; returns a health score.
 - `council` — convenes 7 expert personas to debate a decision and produce a synthesized verdict.
+
+## Versioning
+
+This repo uses simple integer versions (v1, v2, v3, …) tracked in `CHANGELOG.md`, newest first. Each entry is a summary of what changed — not a step list — since `/dotfiles-apply` infers the concrete actions at apply time by cross-referencing `SETUP.md`, `settings.json`, `skills/`, and `commands/`.
+
+Each machine keeps its own installed version in `.dotfiles-version`, a local, gitignored file (never committed — the whole point is that it tracks what *this* machine has applied, which can lag behind the repo).
+
+- After pulling changes on an existing machine: run `/dotfiles-apply` to bring it up to date.
+- After editing this repo: run `/dotfiles-release` to bump the version and record what changed.
 
 ## External tools
 
@@ -71,4 +85,4 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 
 Session and project transcripts, caches, daemon state, the plugin install cache, `plans/`, and secrets (`.credentials.json`, daemon/session keys) are never committed. `.gitignore` is an allowlist, so any new runtime file stays ignored by default.
 
-The `autoMode` block (auto-mode environment context, incl. trusted repos) is per-machine and intentionally not versioned. `settings.local.json` and `settings.json.bak*` are never tracked.
+The `autoMode` block (auto-mode environment context, incl. trusted repos) is per-machine and intentionally not versioned. `settings.local.json` and `settings.json.bak*` are never tracked. `.dotfiles-version` (this machine's installed dotfiles version, see "Versioning" above) is also never tracked.

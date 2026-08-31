@@ -86,3 +86,15 @@ Then start `claude` in any directory and confirm:
 - `/cleanup`, `/council`, `/context-audit` appear in the slash-command list
 - `git -C ~/.claude status --short` is empty
 - `autoMode` is not tracked; run auto-mode setup on this machine if you want it
+
+## 8. Record the installed dotfiles version
+
+This repo tracks changes in `CHANGELOG.md` (integer versions, newest first). Now that setup is complete, mark this machine as current with the latest version:
+
+```
+grep -m1 -oP '## v\K[0-9]+' ~/.claude/CHANGELOG.md > ~/.claude/.dotfiles-version
+```
+
+`.dotfiles-version` is local and gitignored — it is not part of the repo.
+
+**This is a one-time step.** For later updates, do not re-run this file: `git pull` in `~/.claude`, then run `/dotfiles-apply`, which reads `CHANGELOG.md` and brings the machine up to date with whatever changed since the version recorded here.

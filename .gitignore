@@ -4,6 +4,7 @@
 !.gitignore
 !README.md
 !SETUP.md
+!CHANGELOG.md
 
 !CLAUDE.md
 !settings.json
@@ -21,3 +22,6 @@ daemon/control.key
 sessions/*.key
 settings.local.json
 settings.json.bak*
+
+# machine-local installed dotfiles version (never track)
+.dotfiles-version
