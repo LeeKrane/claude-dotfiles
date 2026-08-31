@@ -57,9 +57,10 @@
     "superpowers@superpowers-dev": true,
     "claude-mem@thedotmack": true,
     "impeccable@impeccable": true,
-    "ui-ux-pro-max@ui-ux-pro-max-skill": true,
-    "taste-skill@taste-skill": true,
-    "watermarks-remover@watermarks-remover": true
+    "taste-skill@taste-skill": false,
+    "watermarks-remover@watermarks-remover": true,
+    "security-guidance@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -84,12 +85,6 @@
       "source": {
         "source": "github",
         "repo": "pbakaus/impeccable"
-      }
-    },
-    "ui-ux-pro-max-skill": {
-      "source": {
-        "source": "github",
-        "repo": "nextlevelbuilder/ui-ux-pro-max-skill"
       }
     },
     "taste-skill": {
