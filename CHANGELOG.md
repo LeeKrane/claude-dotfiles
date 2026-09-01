@@ -2,6 +2,21 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v4 — 2026-09-01
+
+Replaced the council skill. Removed `skills/council/` (itshussainsprojects
+7-persona roleplay council — all personas written by one context, no
+independent reasoning). Installed `skills/council-review/` from
+ngmeyer/skills@701dfb8 via the official `npx skills` CLI (selective install,
+update with `npx skills update`): DMAD council of 5 parallel advisors with
+distinct reasoning methods, anonymous peer review, mandatory
+devil's-advocate-vs-consensus pass, chairman synthesis; modes --quick /
+--adaptive / --confidence / --measure-diversity / --jury. Vetted before
+install (SkillSpector static clean + manual read). Rejected alternatives:
+0xNyk council-of-high-intelligence, wan-huiyan agent-review-panel.
+Updated the README skill listing and SETUP.md (verify step now checks
+/council-review; added its skills-CLI registration line) accordingly.
+
 ## v3 — 2026-09-01
 
 Installed 10 individually selected skills into `skills/` — a hand-picked

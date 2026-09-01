@@ -14,7 +14,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 | `commands/dotfiles-apply.md` | `/dotfiles-apply` slash command |
 | `commands/dotfiles-release.md` | `/dotfiles-release` slash command |
 | `skills/context-audit/` | `context-audit` skill |
-| `skills/council/` | `council` skill (+ `personas/`, `templates/`) |
+| `skills/council-review/` | `council-review` skill (DMAD 5-advisor council; ngmeyer/skills, via `npx skills`) |
 | `skills/handoff/` | `handoff` skill (mattpocock/skills, via `npx skills`) |
 | `skills/wayfinder/` | `wayfinder` skill (mattpocock/skills, via `npx skills`) |
 | `skills/research/` | `research` skill (mattpocock/skills, via `npx skills`) |
@@ -73,7 +73,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 - `/dotfiles-apply` — after a `git pull`, brings this machine up to date with any pending `CHANGELOG.md` versions.
 - `/dotfiles-release` — after editing this repo, bumps the version, drafts a `CHANGELOG.md` entry, and commits (never pushes).
 - `context-audit` — audits Claude Code settings, CLAUDE.md, and skills for token waste; returns a health score.
-- `council` — convenes 7 expert personas to debate a decision and produce a synthesized verdict.
+- `/council-review` — runs a decision through 5 parallel advisors with distinct reasoning methods, anonymous peer review, a devil's-advocate pass, and a chairman verdict (`--quick`/`--adaptive`/`--confidence`/`--jury`).
 - `/handoff` — compacts the current conversation into a handoff document (state, next steps, suggested skills) so a fresh session continues without re-deriving the plan.
 - `/wayfinder` — plans work too big for one session as a map of decision tickets on the repo's issue tracker, resolved one per session until the route is clear.
 - `research` — spawns a background agent that investigates a question against primary sources and saves a cited Markdown file into the repo.

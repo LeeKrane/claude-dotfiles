@@ -81,6 +81,7 @@ The `skills/` directory is tracked in this repo, so the clone already contains e
 ```
 npx -y skills@latest add mattpocock/skills --skill handoff --skill wayfinder --skill research --skill domain-modeling --skill prototype --skill grilling --skill setup-matt-pocock-skills --agent claude-code --global --yes
 npx -y skills@latest add cursor/plugins --skill technical-writing --skill blast-radius --skill unslop --agent claude-code --global --yes
+npx -y skills@latest add ngmeyer/skills --skill council-review --agent claude-code --global --yes
 ```
 
 After an update run, review the diff before committing — skills are re-vetted on refresh (see CHANGELOG v3).
@@ -96,7 +97,7 @@ claude plugin list
 Then start `claude` in any directory and confirm:
 
 - statusline renders
-- `/cleanup-session-codebase`, `/cleanup-whole-codebase`, `/council`, `/context-audit` appear in the slash-command list
+- `/cleanup-session-codebase`, `/cleanup-whole-codebase`, `/council-review`, `/context-audit` appear in the slash-command list
 - `git -C ~/.claude status --short` is empty
 - `autoMode` is not tracked; run auto-mode setup on this machine if you want it
 
