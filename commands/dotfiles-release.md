@@ -1,4 +1,4 @@
-Release a new dotfiles version: inspect what changed in `~/.claude`, bump the version, draft a `CHANGELOG.md` entry, update the local version marker, and commit — without pushing.
+Release a new dotfiles version: inspect what changed in `~/.claude`, bump the version, draft a `CHANGELOG.md` entry, bring `README.md` and `SETUP.md` in line with the changes, update the local version marker, and commit — without pushing.
 
 ## 1. Inspect what changed
 
@@ -30,13 +30,23 @@ Use today's date. Prepend the new entry directly under the `# Changelog` header 
 <summary of what changed>
 ```
 
-## 5. Update the local version marker
+## 5. Doc-consistency pass (README.md, SETUP.md)
+
+The changelog records history; README and SETUP describe current state — check both against every change in this release:
+
+- **README.md**: the file/skill tables (one row per skill, naming its source and install method — never a grouped placeholder row), the "Skills & commands" descriptions, the plugin table, and the CLAUDE.md-conventions summary. Add/remove/reword rows for anything this release added, removed, or renamed.
+- **SETUP.md**: the marketplace-add and plugin-install command lists, the skills-CLI registration commands (section 6b), the verify step's slash-command and plugin-count checks, and any tool/dependency steps. A fresh machine following SETUP.md verbatim must end up matching this release's state — stale install lines here actively mislead `/dotfiles-apply` on other machines.
+- Check any other tracked doc the release touches conceptually (e.g. `CLAUDE.md` summaries in README).
+
+If nothing in a file is affected, say so and move on — don't rewrite for its own sake.
+
+## 6. Update the local version marker
 
 Write the new version number alone to `~/.claude/.dotfiles-version`. The machine drafting the release is by definition already current at the new version.
 
-## 6. Commit
+## 7. Commit
 
-Stage the changelog and any other changes covered by this release, and commit with a subject-only message (no body, no `Co-Authored-By` or other Claude/Anthropic attribution — per `CLAUDE.md`). Example subject: `Release v<N>: <short summary>`.
+Stage the changelog, the doc updates from step 5, and any other changes covered by this release, and commit with a subject-only message (no body, no `Co-Authored-By` or other Claude/Anthropic attribution — per `CLAUDE.md`). Example subject: `Release v<N>: <short summary>`.
 
 **Never push.** Leave the push to the user.
 

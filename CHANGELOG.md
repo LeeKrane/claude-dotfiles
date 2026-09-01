@@ -2,6 +2,20 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v5 — 2026-09-01
+
+Extended the /dotfiles-release command with a doc-consistency pass: before
+committing, it now checks README.md (file/skill tables, per-skill
+descriptions, plugin table) and SETUP.md (marketplace/install command
+lists, skills-CLI registrations, verify-step checks) against the release's
+changes, so current-state docs can no longer drift from the changelog the
+way SETUP.md did between v2 and v4. Commit step renumbered accordingly.
+README now distinguishes self-authored commands (the four cleanup/dotfiles
+slash commands) from installed third-party skills, with source attribution
+per entry (context-audit marked "source unknown"). Repaired v2-era drift in
+the README plugin table: removed ui-ux-pro-max, added security-guidance and
+frontend-design, marked taste-skill globally disabled.
+
 ## v4 — 2026-09-01
 
 Replaced the council skill. Removed `skills/council/` (itshussainsprojects

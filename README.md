@@ -9,11 +9,11 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 | `CLAUDE.md` | Global instructions loaded into every session |
 | `settings.json` | Permissions, hooks, model, statusline, plugins |
 | `statusline-command.sh` | Statusline script (model, context fill, rate limits) |
-| `commands/cleanup-session-codebase.md` | `/cleanup-session-codebase` slash command |
-| `commands/cleanup-whole-codebase.md` | `/cleanup-whole-codebase` slash command |
-| `commands/dotfiles-apply.md` | `/dotfiles-apply` slash command |
-| `commands/dotfiles-release.md` | `/dotfiles-release` slash command |
-| `skills/context-audit/` | `context-audit` skill |
+| `commands/cleanup-session-codebase.md` | `/cleanup-session-codebase` slash command (self-authored) |
+| `commands/cleanup-whole-codebase.md` | `/cleanup-whole-codebase` slash command (self-authored) |
+| `commands/dotfiles-apply.md` | `/dotfiles-apply` slash command (self-authored) |
+| `commands/dotfiles-release.md` | `/dotfiles-release` slash command (self-authored) |
+| `skills/context-audit/` | `context-audit` skill (third-party, source unknown) |
 | `skills/council-review/` | `council-review` skill (DMAD 5-advisor council; ngmeyer/skills, via `npx skills`) |
 | `skills/handoff/` | `handoff` skill (mattpocock/skills, via `npx skills`) |
 | `skills/wayfinder/` | `wayfinder` skill (mattpocock/skills, via `npx skills`) |
@@ -52,8 +52,9 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 | `superpowers@superpowers-dev` | obra/superpowers | Core skills library: TDD, debugging, collaboration patterns |
 | `claude-mem@thedotmack` | thedotmack/claude-mem | Persists context/memory across sessions |
 | `impeccable@impeccable` | pbakaus/impeccable | Design fluency for frontend dev (polish, audit, critique) |
-| `ui-ux-pro-max@ui-ux-pro-max-skill` | nextlevelbuilder/ui-ux-pro-max-skill | UI/UX design intelligence: styles, palettes, fonts, charts |
-| `taste-skill@taste-skill` | Leonxlnx/taste-skill | Frontend design taste skills (brutalist, minimalist, soft, ...) |
+| `taste-skill@taste-skill` | Leonxlnx/taste-skill | Frontend design taste skills (brutalist, minimalist, soft, ...) — globally disabled; enable per project |
+| `security-guidance@claude-plugins-official` | ships with Claude Code | Hooks-only security guardrails: pattern warnings + LLM diff review on commit/push |
+| `frontend-design@claude-plugins-official` | ships with Claude Code | Distinctive, intentional visual design guidance for new UI |
 | `watermarks-remover@watermarks-remover` | guillaumemeyer/watermarks-remover | Removes AI provenance marks from generated files. On install it writes `WATERMARKS_HOOK_MODE` into `settings.json` and leaves a `settings.json.bak-wm` backup |
 
 `enabledPlugins` and `extraKnownMarketplaces` in `settings.json` declare these; installation itself is not versioned (see `SETUP.md`).
@@ -68,11 +69,16 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 
 ## Skills & commands
 
+### Self-authored commands
+
 - `/cleanup-session-codebase` — reviews the session's diff and removes dead code, debug logging, and orphaned files/tests; double-checks every finding before deleting.
 - `/cleanup-whole-codebase` — same cleanup across the entire repo, not just the session's diff; double-checks every finding before deleting.
 - `/dotfiles-apply` — after a `git pull`, brings this machine up to date with any pending `CHANGELOG.md` versions.
-- `/dotfiles-release` — after editing this repo, bumps the version, drafts a `CHANGELOG.md` entry, and commits (never pushes).
-- `context-audit` — audits Claude Code settings, CLAUDE.md, and skills for token waste; returns a health score.
+- `/dotfiles-release` — after editing this repo, bumps the version, drafts a `CHANGELOG.md` entry, syncs README/SETUP, and commits (never pushes).
+
+### Installed skills (third-party; source per entry)
+
+- `context-audit` (source unknown) — audits Claude Code settings, CLAUDE.md, and skills for token waste; returns a health score.
 - `/council-review` — runs a decision through 5 parallel advisors with distinct reasoning methods, anonymous peer review, a devil's-advocate pass, and a chairman verdict (`--quick`/`--adaptive`/`--confidence`/`--jury`).
 - `/handoff` — compacts the current conversation into a handoff document (state, next steps, suggested skills) so a fresh session continues without re-deriving the plan.
 - `/wayfinder` — plans work too big for one session as a map of decision tickets on the repo's issue tracker, resolved one per session until the route is clear.
