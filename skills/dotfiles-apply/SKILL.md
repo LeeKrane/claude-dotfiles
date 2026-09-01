@@ -1,3 +1,9 @@
+---
+name: dotfiles-apply
+description: "After a git pull in ~/.claude, bring this machine up to date with any pending CHANGELOG.md versions. Use only when explicitly invoked via /dotfiles-apply."
+disable-model-invocation: true
+---
+
 Apply any pending dotfiles versions to this machine. This repo (`~/.claude`) tracks changes in `CHANGELOG.md` (integer versions, newest first); each machine keeps its own installed version in a local, gitignored `.dotfiles-version` file. This command brings the machine up to date after a `git pull`.
 
 ## 1. Determine the installed version

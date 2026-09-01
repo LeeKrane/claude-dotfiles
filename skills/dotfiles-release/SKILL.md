@@ -1,3 +1,9 @@
+---
+name: dotfiles-release
+description: "Release a new dotfiles version: inspect changes in ~/.claude, bump the version, draft a CHANGELOG.md entry, sync README/SETUP, update the local version marker, and commit without pushing. Use only when explicitly invoked via /dotfiles-release."
+disable-model-invocation: true
+---
+
 Release a new dotfiles version: inspect what changed in `~/.claude`, bump the version, draft a `CHANGELOG.md` entry, bring `README.md` and `SETUP.md` in line with the changes, update the local version marker, and commit — without pushing.
 
 ## 1. Inspect what changed

@@ -1,3 +1,9 @@
+---
+name: cleanup-whole-codebase
+description: "Review the entire repo and remove dead code, debug logging, and orphaned files/tests, double-checking every finding before deleting. Use only when explicitly invoked via /cleanup-whole-codebase."
+disable-model-invocation: true
+---
+
 Review the WHOLE codebase — every file in the repo, not just this session's changes. Clean it up:
 
 Delete dead code: unused functions, variables, imports, params, and commented-out blocks.

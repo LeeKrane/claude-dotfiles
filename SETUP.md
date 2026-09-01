@@ -66,11 +66,12 @@ claude plugin install taste-skill@taste-skill
 claude plugin install watermarks-remover@watermarks-remover
 claude plugin install security-guidance@claude-plugins-official
 claude plugin install frontend-design@claude-plugins-official
+claude plugin install skill-creator@claude-plugins-official
 ```
 
 (`claude-plugins-official` ships with Claude Code — no `marketplace add` needed. taste-skill is installed but globally disabled in `settings.json`; re-enable per project via `.claude/settings.local.json`.)
 
-Verify: `claude plugin list` shows all 8, with 7 enabled and taste-skill disabled.
+Verify: `claude plugin list` shows all 9, with 8 enabled and taste-skill disabled.
 
 Note: watermarks-remover patches `settings.json` on install (adds `env.WATERMARKS_HOOK_MODE`, writes a `settings.json.bak-wm` backup). The key is already tracked, so there should be no diff. If `git -C ~/.claude status --short` shows `settings.json` modified afterwards, inspect the diff; discard with `git -C ~/.claude checkout -- settings.json` unless the change is wanted. `settings.json.bak-wm` is gitignored and can be deleted.
 

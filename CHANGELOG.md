@@ -2,6 +2,30 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v6 — 2026-09-01
+
+Installed plugin skill-creator from claude-plugins-official (ships with
+Claude Code). Authored self-made skill skill-scout with it: researches,
+evaluates, and vets candidate skills/plugins against real usage data
+(history.jsonl + claude-mem mining, FULL/PARTIAL/NONE overlap matrix,
+fit × benefit − overlap ranking with per-candidate work/token briefings,
+mandatory SkillSpector + full-manual-read security gate, install-channel
+preference marketplace > npx skills > vendoring, /council-review --quick
+offer on close calls, analyze-then-ask default — never installs without
+approval). Model-invoked on explicit phrases ("scout skills", "evaluate
+this skill/plugin", "audit my skills", "should I install X") and via
+/skill-scout.
+
+Converted the four self-authored commands to skills 1:1 (user-invoked
+only, disable-model-invocation): /dotfiles-release, /dotfiles-apply,
+/cleanup-session-codebase, /cleanup-whole-codebase now live under
+skills/; the commands/ directory is removed. Slash invocation unchanged.
+
+Known pitfall documented: the watermarks-remover clean-mode PostToolUse
+hook strips `description:` lines from markdown frontmatter written via
+the Write/Edit tools — write skill frontmatter via shell commands, or
+temporarily disable the hook, when authoring skills.
+
 ## v5 — 2026-09-01
 
 Extended the /dotfiles-release command with a doc-consistency pass: before

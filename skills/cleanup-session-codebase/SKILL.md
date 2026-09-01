@@ -1,3 +1,9 @@
+---
+name: cleanup-session-codebase
+description: "Review this session's diff against the base branch and remove dead code, debug logging, and orphaned files/tests, double-checking every finding before deleting. Use only when explicitly invoked via /cleanup-session-codebase."
+disable-model-invocation: true
+---
+
 Review everything we changed this session (git diff against the base branch). Clean it up:
 
 Delete dead code: unused functions, variables, imports, params, and any commented-out blocks we left behind.
