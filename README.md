@@ -8,7 +8,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 |---|---|
 | `CLAUDE.md` | Global instructions loaded into every session |
 | `settings.json` | Permissions, hooks, model, statusline, plugins |
-| `statusline-command.sh` | Statusline script (model, context fill, rate limits) |
+| `statusline-command.sh` | Statusline script (model, context fill, 5h/7d limits with ↻ reset times, pace-aware 7d color, prompt-cache flame/snowflake) |
 | `skills/cleanup-session-codebase/` | `/cleanup-session-codebase` skill (self-authored) |
 | `skills/cleanup-whole-codebase/` | `/cleanup-whole-codebase` skill (self-authored) |
 | `skills/dotfiles-apply/` | `/dotfiles-apply` skill (self-authored) |

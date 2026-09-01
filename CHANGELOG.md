@@ -2,6 +2,27 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v7 — 2026-09-01
+
+Statusline rewrite (statusline-command.sh), decided via /council-review
+runs plus format interview. New: 7-day rate-limit segment now shows its
+reset moment as ↻ + German two-letter weekday + local time (weekday
+dropped when the reset lands today) — absolute weekday+time chosen over
+a relative countdown; 7-day color is now pace-aware (severity = max of
+raw percent and burn pace vs elapsed window fraction, so 40% one day
+into the week goes red while 40% at mid-week stays green). New
+prompt-cache segment as the last element: green Nerd Font flame
+(U+F0238) while warm, gold flame + minutes-remaining when under ~25% of
+TTL, muted-blue snowflake when cold/expired; self-omits on Claude Code
+<2.1.251 or before the first API response (note: jq's `//` treats
+`false` as absent — `.prompt_cache.warm` needs an explicit null check).
+The 5h segment's "resets" label is now the same ↻ icon. Removed the
+(NNNK/NNNK) token-count text from the ctx segment (bar + percent only).
+Refactored all field extraction into a single jq call (was ~8 forks per
+render). Council-rejected and not added: 7d bar, threshold-gated
+display, spend_limit segment, session cost, lines added/removed, mode
+flags, PR/worktree/vim/elapsed-time segments.
+
 ## v6 — 2026-09-01
 
 Installed plugin skill-creator from claude-plugins-official (ships with
