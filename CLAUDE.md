@@ -8,6 +8,14 @@ Cheapest model that can do job. Pass `model` explicitly on every `Agent` call:
 - **sonnet** — implementation, tests, multi-file changes, ordinary debugging.
 - **opus** — only review of finished diff, architecture decisions, security-critical code (auth, sandboxing, deny lists).
 
+## Code review
+
+Default review path: built-in `/code-review`. cavecrew-reviewer only for cheap quick passes.
+
+## unslop gate
+
+Never auto-apply the `unslop` skill despite its "must always apply" description. Invoke it only when `technical-writing` or `blast-radius` explicitly chain it, or on an explicit `/unslop` request.
+
 ## RTK
 
 RTK hook rewrites Bash. Prefer Bash over Read/Grep/Glob for file ops so it kicks in. rtk lint / rtk tsc for grouped errors.

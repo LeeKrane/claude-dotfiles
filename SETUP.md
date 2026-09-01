@@ -53,7 +53,6 @@ claude plugin marketplace add JuliusBrussee/caveman
 claude plugin marketplace add obra/superpowers
 claude plugin marketplace add thedotmack/claude-mem
 claude plugin marketplace add pbakaus/impeccable
-claude plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill
 claude plugin marketplace add Leonxlnx/taste-skill
 claude plugin marketplace add guillaumemeyer/watermarks-remover
 ```
@@ -63,14 +62,28 @@ claude plugin install caveman@caveman
 claude plugin install superpowers@superpowers-dev
 claude plugin install claude-mem@thedotmack
 claude plugin install impeccable@impeccable
-claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill
 claude plugin install taste-skill@taste-skill
 claude plugin install watermarks-remover@watermarks-remover
+claude plugin install security-guidance@claude-plugins-official
+claude plugin install frontend-design@claude-plugins-official
 ```
 
-Verify: `claude plugin list` shows all 7 enabled.
+(`claude-plugins-official` ships with Claude Code — no `marketplace add` needed. taste-skill is installed but globally disabled in `settings.json`; re-enable per project via `.claude/settings.local.json`.)
+
+Verify: `claude plugin list` shows all 8, with 7 enabled and taste-skill disabled.
 
 Note: watermarks-remover patches `settings.json` on install (adds `env.WATERMARKS_HOOK_MODE`, writes a `settings.json.bak-wm` backup). The key is already tracked, so there should be no diff. If `git -C ~/.claude status --short` shows `settings.json` modified afterwards, inspect the diff; discard with `git -C ~/.claude checkout -- settings.json` unless the change is wanted. `settings.json.bak-wm` is gitignored and can be deleted.
+
+## 6b. Skills installed via the skills CLI (skills.sh)
+
+The `skills/` directory is tracked in this repo, so the clone already contains every skill — nothing to install. To register them with the skills CLI so `npx skills update` can pull upstream updates on this machine, optionally re-run the original installs (they overwrite with identical content):
+
+```
+npx -y skills@latest add mattpocock/skills --skill handoff --skill wayfinder --skill research --skill domain-modeling --skill prototype --skill grilling --skill setup-matt-pocock-skills --agent claude-code --global --yes
+npx -y skills@latest add cursor/plugins --skill technical-writing --skill blast-radius --skill unslop --agent claude-code --global --yes
+```
+
+After an update run, review the diff before committing — skills are re-vetted on refresh (see CHANGELOG v3).
 
 ## 7. Verify
 

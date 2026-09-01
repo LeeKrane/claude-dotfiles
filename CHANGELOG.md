@@ -2,6 +2,43 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v3 — 2026-09-01
+
+Installed 10 individually selected skills into `skills/` — a hand-picked
+subset of two larger skill collections — via the official `npx skills` CLI
+(skills.sh; selective per-skill installs, update with `npx skills update`),
+after a usage audit + SkillSpector/manual security vetting (all clean,
+verified byte-identical to vetted clones). From mattpocock/skills@6654f6b:
+handoff (session-handoff docs), wayfinder (multi-session decision-ticket
+planning), research (background primary-source research), domain-modeling
+(CONTEXT.md glossary + ADR discipline), prototype (throwaway logic/UI
+prototypes), grilling (wayfinder's interview dependency), and
+setup-matt-pocock-skills (per-repo tracker/domain-doc scaffolding wayfinder
+references). From cursor/plugins pstack@b9ddc83: technical-writing
+(Diátaxis/Google-style/STE doc standard), blast-radius
+(prove-the-safety-fact pre-merge breakage hunt), and unslop (AI-tell
+catalog) — unslop installed only because technical-writing and blast-radius
+chain it; a CLAUDE.md "unslop gate" rule blocks its aggressive
+always-apply auto-trigger (a hard disable-model-invocation would break the
+chained Skill calls). blast-radius references to pstack's how/why/arena are
+left dangling deliberately (those skills were audit-rejected as overlaps).
+
+Added a CLAUDE.md "Code review" rule declaring built-in `/code-review` the
+default review path (cavecrew-reviewer for cheap quick passes). Skill
+provenance lives here in the changelog, not in CLAUDE.md.
+
+Pruned plugin cache 571MB → 18MB: removed orphaned ui-ux-pro-max-skill
+cache, disabled taste-skill's leftover cache, 7 stale claude-mem versions
+(kept active 13.21.2), and stale `settings.json.bak-wm`. Normalized model
+setting capitalization to "Fable" in settings.json.
+
+Repaired v2-era drift in SETUP.md: removed the ui-ux-pro-max marketplace
+and install lines (dropped in v2), added the security-guidance and
+frontend-design installs from claude-plugins-official (added in v2), noted
+taste-skill's globally-disabled state, and added section 6b describing the
+skills-CLI channel (re-registering the tracked `skills/` dirs with
+`npx skills` so updates work on a fresh machine).
+
 ## v2 — 2026-08-31
 
 Added plugins security-guidance and frontend-design from the official

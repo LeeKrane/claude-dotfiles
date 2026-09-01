@@ -24,7 +24,7 @@
       "Grep(.cache/**)"
     ]
   },
-  "model": "fable",
+  "model": "Fable",
   "hooks": {
     "UserPromptSubmit": [
       {
