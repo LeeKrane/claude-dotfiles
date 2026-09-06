@@ -77,7 +77,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 - `/cleanup-whole-codebase` — same cleanup across the entire repo, not just the session's diff; double-checks every finding before deleting.
 - `/dotfiles-apply` — after a `git pull`, brings this machine up to date with any pending `CHANGELOG.md` versions.
 - `/dotfiles-release` — after editing this repo, bumps the version, drafts a `CHANGELOG.md` entry, syncs README/SETUP, and commits (never pushes).
-- `skill-scout` — researches, evaluates, and vets candidate skills/plugins against real usage data (fit/benefit/overlap ranking, SkillSpector + manual security gate, channel-ordered install), reporting before anything is installed. Also `/skill-scout`.
+- `skill-scout` — researches, evaluates, and vets candidate skills/plugins against real usage data: overlap matrix with replacement comparisons (measured always-on and on-invocation token cost, capability delta, keep/replace/alongside/skip), scaled fit/benefit/overlap/token scoring, skill-vs-hook form check, then an automatic `council-review` debate on overlap, gaps, fit, and form (`--no-council` to opt out), SkillSpector + manual security gate, and channel-ordered install with keep/alongside/replace/hook/hybrid branches — reporting before anything is installed. Also `/skill-scout`.
 
 ### Installed skills (third-party; source per entry)
 

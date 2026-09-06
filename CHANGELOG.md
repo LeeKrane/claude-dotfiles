@@ -2,6 +2,31 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v8 — 2026-09-07
+
+skill-scout skill rewrite (skills/skill-scout/SKILL.md), peer-reviewed by
+three independent reviewers. New mandatory step 5: every scout run with
+candidates auto-invokes the council-review skill (one council per run,
+`--measure-diversity` always on; full mode on any FULL overlap, replace
+call, hook/hybrid candidate, or top-two scores within 3 points; `--quick`
+otherwise; new `--no-council` opt-out flag). The council debates four
+questions — overlap correctness, real-vs-imagined gaps, fit with this
+setup, and form (skill vs hook vs hybrid) — from a neutral question with
+the draft verdict placed in CONTEXT as one option, a preamble asking for
+a per-candidate Recommendation table and skipping cwd auto-context, and
+explicit rules for consuming Error Catch / Value Tension / Blind Spots /
+What You Lose / Diversity Check and for pre-flight declines. Step 3 adds
+a replacement comparison table (always-on cost per form — skill, plugin,
+hook, MCP — on-invocation cost, capability delta, trigger quality,
+provenance, security) ending in keep/replace/alongside/skip. Step 4
+score now has scales (fit and benefit 1–5, overlap penalty 0/2/4, token
+penalty 0–3 by net always-on tokens) and a form check naming the hook
+event. Step 8 gains install branches for keep, alongside, replace, hook
+(drafted via update-config, shown before enabling, skill never
+installed) and hybrid. Security gate: findings get explicit
+dispositions, hook-bound candidates still scanned and read. Old
+"offer /council-review on close calls" step removed.
+
 ## v7 — 2026-09-01
 
 Statusline rewrite (statusline-command.sh), decided via /council-review
