@@ -2,6 +2,25 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v9 — 2026-09-07
+
+skill-scout report format rewrite (skills/skill-scout/SKILL.md), driven
+by the first v8 scout run's terminal output and one opus peer review.
+Step 7 ranked list is now a numbered list with one fact per line per
+candidate — name plus a one-line "what it does" from its SKILL.md,
+Overlap → counterpart, Cost (per form: skill always-on/on-invocation,
+hook injected tok/session, MCP schema, hybrid halves joined with +),
+Form, Score, Call with fixed council markers (council-corrected from X:
+reason / council-unreviewed / council risk not applied — diversity
+Low), Because (decisive fact, defined by the Flips-if test; cost
+numbers must be paired with the usage count they are weighed against),
+Flips if. Wide tables banned: every other report table capped at 4
+columns, step 3 replacement comparison reoriented to measure |
+candidate | counterpart, council table to candidate | call | what it
+changed (step 5 preamble aligned). Step 4 skip one-liner removed —
+every candidate goes through the step 7 block, briefing limited to
+non-skip candidates.
+
 ## v8 — 2026-09-07
 
 skill-scout skill rewrite (skills/skill-scout/SKILL.md), peer-reviewed by

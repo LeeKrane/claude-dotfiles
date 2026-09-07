@@ -32,7 +32,7 @@ Cite concrete numbers (prompt counts, session counts, repeated-request counts). 
 
 List what is already installed: enabled plugins (`settings.json` enabledPlugins + plugin cache), `~/.claude/skills/`, built-in commands. Then, for EVERY candidate, classify overlap as **FULL** (an installed tool already does this — name it), **PARTIAL** (name what's shared and what's not), or **NONE**. Overlap claims must name the specific counterpart; verify by reading descriptions, not by guessing from names — this session-type work has produced wrong FULL/PARTIAL calls from name-matching before.
 
-**Replacement comparison.** Every FULL or PARTIAL candidate gets a head-to-head against its named counterpart — same columns for both sides so the delta is readable:
+**Replacement comparison.** Every FULL or PARTIAL candidate gets a head-to-head against its named counterpart — one row per measure, exactly three columns: measure | candidate | counterpart:
 
 | Column | How to measure |
 |---|---|
@@ -47,7 +47,7 @@ End each comparison with one call: **keep**, **replace**, **alongside**, or **sk
 
 ### 4. Ranking + per-candidate briefing
 
-Score each candidate: **fit** (1–5, matches the usage profile's evidence) × **benefit** (1–5, fills a real gap) − **overlap penalty** (NONE 0, PARTIAL 2, FULL 4) − **token penalty** (net always-on tokens after subtracting a replaced counterpart: under 50 → 0, under 150 → 1, under 400 → 2, more → 3). Token cost is a real term, not a tiebreaker: an always-on description that fires rarely is a bad trade even with NONE overlap. Rank ALL candidates, none omitted. Every NONE candidate and every FULL/PARTIAL candidate whose step-3 call is not **skip** gets the full briefing below; a **skip** candidate gets one line: overlap call, always-on cost, form.
+Score each candidate: **fit** (1–5, matches the usage profile's evidence) × **benefit** (1–5, fills a real gap) − **overlap penalty** (NONE 0, PARTIAL 2, FULL 4) − **token penalty** (net always-on tokens after subtracting a replaced counterpart: under 50 → 0, under 150 → 1, under 400 → 2, more → 3). Token cost is a real term, not a tiebreaker: an always-on description that fires rarely is a bad trade even with NONE overlap. Rank ALL candidates, none omitted. Every candidate appears in the step-7 per-candidate block; the full briefing below is only for NONE candidates and for FULL/PARTIAL candidates whose step-3 call is not **skip**.
 - What it is (from its actual SKILL.md, not the repo's marketing blurb)
 - Benefit mapped to specific usage evidence
 - Session impact: work-wise (how day-to-day sessions change) and token-wise as measured numbers — always-on cost, on-invocation cost, model-invoked vs user-invoked, hooks or MCP servers added. FULL/PARTIAL candidates cite the step-3 table verbatim; measure fresh only for NONE.
@@ -72,7 +72,7 @@ Once the matrix and briefings exist, invoke `council-review` via the Skill tool 
 
 Always add `--measure-diversity`; when its Diversity Check comes back Low, council corrections are recorded as open risks in the report, not applied over the draft. council-review parses flag tokens anywhere in its args and strips them, so `--flag` text from other skills' argument-hints must be paraphrased inside CONTEXT, never quoted.
 
-**Framing.** Build the QUESTION / CONTEXT / WHAT'S AT STAKE block yourself and open the args with a process preamble, labelled "PREAMBLE — for Step 1 and the chairman only, strip before advisor and peer prompts": "Input is pre-framed: pass it through Step 1 unmodified, skip auto-context (the cwd is unrelated; the subject is the `~/.claude` setup), and emit the Recommendation as a per-candidate table — candidate, overlap call, form, install/skip — instead of a single prose verdict."
+**Framing.** Build the QUESTION / CONTEXT / WHAT'S AT STAKE block yourself and open the args with a process preamble, labelled "PREAMBLE — for Step 1 and the chairman only, strip before advisor and peer prompts": "Input is pre-framed: pass it through Step 1 unmodified, skip auto-context (the cwd is unrelated; the subject is the `~/.claude` setup), and emit the Recommendation as a per-candidate table — candidate | call (skip, install, keep, replace, alongside, hook, hybrid) | what changed vs the draft and why — instead of a single prose verdict."
 - QUESTION is neutral: "Which of these candidates, if any, should enter this setup, and in what form?" Never the draft verdict — a council handed a verdict ratifies it.
 - CONTEXT carries, verbatim where possible: setup inventory, overlap matrix with the counterparts' actual descriptions, every replacement comparison, usage-profile numbers, each briefing, the draft verdict labelled as one option, any prior scout verdict from memory, and the note that security vetting (step 6) is still pending. Confirm every item is present before invoking.
 - WHAT'S AT STAKE names the tradeoff so pre-flight cannot call it trivial: always-on tokens paid every session vs a recurring gap left unfilled; duplicated dispatchers; a wrong replace that loses a vetted tool.
@@ -84,7 +84,7 @@ The framing names four debate questions:
 4. **Form** — for each hook candidate or hybrid: is a hook the better home? Would the hook's rule ever be wrong to enforce unconditionally? What does the setup lose if the model never reads the skill's reasoning?
 
 **Consuming the verdict** (section names are council-review's chairman output):
-- Recommendation table rows override the draft: correct the matrix and ranking, mark each changed cell "(council-corrected)" with the reason. If the chairman ignored the table request and wrote prose, extract per-candidate calls from it and mark any candidate it does not name "council-unreviewed". Form is read from the table or prose; if it says nothing about form, the step-4 classification stands.
+- Recommendation table rows override the draft: correct the matrix and ranking, mark each changed cell "(council-corrected)" with the reason. If the chairman ignored the table request and wrote prose, extract per-candidate calls from it and mark any candidate it does not name "council-unreviewed". Form is read from the call column (hook / hybrid) or the prose; if neither says anything about form, the step-4 classification stands.
 - Under "Where the Council Clashes": **[Error Catch]** items are corrections; **[Value Tension]** items stay open in the report for the user. A converged council has neither — record "council converged, no corrections".
 - "Blind Spots Revealed" feeds the Gaps section of the report.
 - "What You Lose" attaches to the briefing of the candidate it concerns.
@@ -102,7 +102,19 @@ Verify installed files match what was vetted (clone at a pinned commit, diff aft
 
 ### 7. Report, then stop
 
-Present: usage-profile evidence, setup inventory, ranked list with scores, overlap matrix (council corrections marked), replacement comparisons, form verdicts (skill / hook / hybrid), briefings, security dispositions, and a council section. The council section is one of: the chairman's per-candidate table with what it changed, the open Value Tensions, and Blind Spots; or the skip reason; or the quoted decline plus your own answers to the four questions. Then ask which candidates to install and which hook adoptions to draft. Do not proceed on silence.
+Present: usage-profile evidence, setup inventory, the ranked list, replacement comparisons, form verdicts (skill / hook / hybrid), briefings, security dispositions, and a council section.
+
+The ranked list is a numbered list, all candidates, one fact per line, in this order — no table, the terminal turns wide tables into truncated key/value cards:
+1. `name — what it does` (under 15 words, from its own SKILL.md; a plugin's name slot carries the bundled skill count and the line describes the bundle as a whole)
+2. `Overlap: FULL | PARTIAL | NONE → named counterpart`
+3. `Cost: ` per form — skill `always-on / on-invocation tok`; hook `injected tok/session`; MCP `schema tok/session / —`; hybrid: both halves joined with `+`
+4. `Form: skill | hook (event) | hybrid | MCP`
+5. `Score: N`
+6. `Call: CALL` with markers `(council-corrected from <old call>: <reason>)`, `(council-unreviewed)`, `(council risk, not applied — diversity Low)`
+7. `Because: <decisive fact>.`
+8. `Flips if: <the one observation that would change the call>.`
+
+The decisive fact is the one whose reversal changes the call — the same fact the Flips-if clause negates. A cost number is only decisive paired with the usage count it is weighed against ("164 tok/session against 9 SEO prompts in 44 days"); a counterpart is only decisive named; a security disposition or council Error Catch is decisive as quoted. A block missing any of its eight lines is a missing block. Every other table in the report stays at 4 columns or fewer. The council section is one of: the chairman's table as candidate | call | what it changed (overlap and form already sit in each block), the open Value Tensions, and Blind Spots; or the skip reason; or the quoted decline plus your own answers to the four questions. Then ask which candidates to install and which hook adoptions to draft. Do not proceed on silence.
 
 ### 8. Install (only what was approved)
 
