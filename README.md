@@ -55,7 +55,6 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 | `impeccable@impeccable` | pbakaus/impeccable | Design fluency for frontend dev (polish, audit, critique) |
 | `taste-skill@taste-skill` | Leonxlnx/taste-skill | Frontend design taste skills (brutalist, minimalist, soft, ...) — globally disabled; enable per project |
 | `security-guidance@claude-plugins-official` | ships with Claude Code | Hooks-only security guardrails: pattern warnings + LLM diff review on commit/push |
-| `frontend-design@claude-plugins-official` | ships with Claude Code | Distinctive, intentional visual design guidance for new UI |
 | `skill-creator@claude-plugins-official` | ships with Claude Code | Create, improve, and eval skills; description-trigger optimization |
 | `watermarks-remover@watermarks-remover` | guillaumemeyer/watermarks-remover | Removes AI provenance marks from generated files. On install it writes `WATERMARKS_HOOK_MODE` into `settings.json` and leaves a `settings.json.bak-wm` backup |
 

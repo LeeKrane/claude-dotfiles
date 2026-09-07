@@ -2,6 +2,22 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v10 — 2026-09-07
+
+Removed plugin `frontend-design@claude-plugins-official` (uninstalled
+via `claude plugin uninstall`, dropped from enabledPlugins). Verdict of
+the 2026-09-07 skill-scout run + council: its SKILL.md is a strict
+subset of the enabled `impeccable` plugin (aesthetic direction,
+typography, anti-generic rules), with none of impeccable's critique,
+audit, DESIGN.md, or live-browser machinery — two skills on the same UI
+trigger for no capability gain. Same run skipped all 20 evaluated
+candidates globally (emil design skill, refero, web-artifacts-builder,
+ui-ux-pro-max, ponytail, diagram-design, visual-plan, graphify,
+humanizer, karpathy skills, dream, brag, video-shotcraft, Context7,
+mcp-builder, webapp-testing, seo-audit, programmatic-seo, ai-seo, cro);
+verdict cached in project memory. Enabled plugin count is now 7 of 8
+installed (taste-skill stays disabled).
+
 ## v9 — 2026-09-07
 
 skill-scout report format rewrite (skills/skill-scout/SKILL.md), driven
