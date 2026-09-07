@@ -14,6 +14,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 | `skills/dotfiles-apply/` | `/dotfiles-apply` skill (self-authored) |
 | `skills/dotfiles-release/` | `/dotfiles-release` skill (self-authored) |
 | `skills/skill-scout/` | `skill-scout` skill (self-authored) |
+| `skills/repo-skills/` | `/repo-skills` skill (self-authored) |
 | `skills/context-audit/` | `context-audit` skill (third-party, source unknown) |
 | `skills/council-review/` | `council-review` skill (DMAD 5-advisor council; ngmeyer/skills, via `npx skills`) |
 | `skills/handoff/` | `handoff` skill (mattpocock/skills, via `npx skills`) |
@@ -26,6 +27,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 | `skills/technical-writing/` | `technical-writing` skill (cursor/plugins pstack, via `npx skills`) |
 | `skills/blast-radius/` | `blast-radius` skill (cursor/plugins pstack, via `npx skills`) |
 | `skills/unslop/` | `unslop` skill (cursor/plugins pstack, via `npx skills`; CLAUDE.md-gated) |
+| `REPO-SKILLS.md` | Registry of repo-scoped skills (vetted, never global), installed per project via `/repo-skills` |
 | `CHANGELOG.md` | Integer-versioned changelog for this repo |
 
 ## settings.json
@@ -53,7 +55,6 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 | `superpowers@superpowers-dev` | obra/superpowers | Core skills library: TDD, debugging, collaboration patterns |
 | `claude-mem@thedotmack` | thedotmack/claude-mem | Persists context/memory across sessions |
 | `impeccable@impeccable` | pbakaus/impeccable | Design fluency for frontend dev (polish, audit, critique) |
-| `taste-skill@taste-skill` | Leonxlnx/taste-skill | Frontend design taste skills (brutalist, minimalist, soft, ...) — globally disabled; enable per project |
 | `security-guidance@claude-plugins-official` | ships with Claude Code | Hooks-only security guardrails: pattern warnings + LLM diff review on commit/push |
 | `skill-creator@claude-plugins-official` | ships with Claude Code | Create, improve, and eval skills; description-trigger optimization |
 | `watermarks-remover@watermarks-remover` | guillaumemeyer/watermarks-remover | Removes AI provenance marks from generated files. On install it writes `WATERMARKS_HOOK_MODE` into `settings.json` and leaves a `settings.json.bak-wm` backup |
@@ -70,6 +71,8 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 
 ## Skills & commands
 
+Some skills are *repo-scoped*: vetted and wanted, but deliberately never installed or enabled globally. They are recorded in `REPO-SKILLS.md` (source, pinned commit, signals, enable recipe) and installed per project by `/repo-skills`. Currently: `video-shotcraft`, `brag`.
+
 ### Self-authored skills
 
 - `/cleanup-session-codebase` — reviews the session's diff and removes dead code, debug logging, and orphaned files/tests; double-checks every finding before deleting.
@@ -77,6 +80,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 - `/dotfiles-apply` — after a `git pull`, brings this machine up to date with any pending `CHANGELOG.md` versions.
 - `/dotfiles-release` — after editing this repo, bumps the version, drafts a `CHANGELOG.md` entry, syncs README/SETUP, and commits (never pushes).
 - `skill-scout` — researches, evaluates, and vets candidate skills/plugins against real usage data: overlap matrix with replacement comparisons (measured always-on and on-invocation token cost, capability delta, keep/replace/alongside/skip), scaled fit/benefit/overlap/token scoring, skill-vs-hook form check, then an automatic `council-review` debate on overlap, gaps, fit, and form (`--no-council` to opt out), SkillSpector + manual security gate, and channel-ordered install with keep/alongside/replace/hook/hybrid branches — reporting before anything is installed, as a per-candidate one-fact-per-line list (description, overlap, cost, form, score, call, because, flips-if). Also `/skill-scout`.
+- `/repo-skills` — reads `REPO-SKILLS.md`, matches each entry's signals (deps, files, user phrasing) against the current project, reports a match table, and on approval installs a pinned copy under the project's `.claude/skills/<name>/` (excluded via `.git/info/exclude`) or re-enables a plugin in its `.claude/settings.local.json`. Never global. `--list` reports without changing anything.
 
 ### Installed skills (third-party; source per entry)
 

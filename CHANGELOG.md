@@ -2,6 +2,24 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v11 — 2026-09-07
+
+New repo-scoped skills registry (`REPO-SKILLS.md`, root, tracked) and its
+consumer `skills/repo-skills/SKILL.md` (`/repo-skills`): skills vetted and
+wanted but never installed or enabled globally, applied per project instead —
+a pinned skill copy under `.claude/skills/` (excluded via `.git/info/exclude`)
+or a plugin re-enable in `.claude/settings.local.json`. First entries:
+`video-shotcraft` (Vincentwei1021/video-shotcraft @ 5f047c7c, Remotion
+product/promo videos) and `brag` (latent-spaces/brag @ 1f8d9ade, HeyGen
+Hyperframes launch videos; Hyperframes CLI installed separately per project).
+skill-scout step 8 gains a `project-scope` verdict that appends a registry
+entry instead of installing. Removed plugin taste-skill@taste-skill and its
+marketplace Leonxlnx/taste-skill entirely (globally disabled since v2, never
+re-enabled anywhere): dropped from `enabledPlugins`, `extraKnownMarketplaces`,
+the README plugin table, and the SETUP install lines; 7 plugins remain, all
+enabled. dotfiles-apply gains a removal action form (plugin uninstall,
+marketplace remove) so removal-only releases are not applied as no-ops.
+
 ## v10 — 2026-09-07
 
 Removed plugin `frontend-design@claude-plugins-official` (uninstalled

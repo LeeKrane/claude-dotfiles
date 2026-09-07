@@ -43,7 +43,7 @@ List what is already installed: enabled plugins (`settings.json` enabledPlugins 
 | Provenance | maintainer, last commit, install channel, update path |
 | Security | Candidate: "pending step 6", filled in before the report. Counterpart: vet date from its provenance comment or changelog entry, else "installed, not re-vetted" |
 
-End each comparison with one call: **keep**, **replace**, **alongside**, or **skip** — with the single decisive reason. "Replace" means the counterpart is removed on install; say what is lost.
+End each comparison with one call: **keep**, **replace**, **alongside**, **skip**, or **project-scope** (vetted, wanted in one repo only — registered in REPO-SKILLS.md, never installed globally) — with the single decisive reason. "Replace" means the counterpart is removed on install; say what is lost.
 
 ### 4. Ranking + per-candidate briefing
 
@@ -72,7 +72,7 @@ Once the matrix and briefings exist, invoke `council-review` via the Skill tool 
 
 Always add `--measure-diversity`; when its Diversity Check comes back Low, council corrections are recorded as open risks in the report, not applied over the draft. council-review parses flag tokens anywhere in its args and strips them, so `--flag` text from other skills' argument-hints must be paraphrased inside CONTEXT, never quoted.
 
-**Framing.** Build the QUESTION / CONTEXT / WHAT'S AT STAKE block yourself and open the args with a process preamble, labelled "PREAMBLE — for Step 1 and the chairman only, strip before advisor and peer prompts": "Input is pre-framed: pass it through Step 1 unmodified, skip auto-context (the cwd is unrelated; the subject is the `~/.claude` setup), and emit the Recommendation as a per-candidate table — candidate | call (skip, install, keep, replace, alongside, hook, hybrid) | what changed vs the draft and why — instead of a single prose verdict."
+**Framing.** Build the QUESTION / CONTEXT / WHAT'S AT STAKE block yourself and open the args with a process preamble, labelled "PREAMBLE — for Step 1 and the chairman only, strip before advisor and peer prompts": "Input is pre-framed: pass it through Step 1 unmodified, skip auto-context (the cwd is unrelated; the subject is the `~/.claude` setup), and emit the Recommendation as a per-candidate table — candidate | call (skip, install, keep, replace, alongside, hook, hybrid, project-scope) | what changed vs the draft and why — instead of a single prose verdict."
 - QUESTION is neutral: "Which of these candidates, if any, should enter this setup, and in what form?" Never the draft verdict — a council handed a verdict ratifies it.
 - CONTEXT carries, verbatim where possible: setup inventory, overlap matrix with the counterparts' actual descriptions, every replacement comparison, usage-profile numbers, each briefing, the draft verdict labelled as one option, any prior scout verdict from memory, and the note that security vetting (step 6) is still pending. Confirm every item is present before invoking.
 - WHAT'S AT STAKE names the tradeoff so pre-flight cannot call it trivial: always-on tokens paid every session vs a recurring gap left unfilled; duplicated dispatchers; a wrong replace that loses a vetted tool.
@@ -114,7 +114,7 @@ The ranked list is a numbered list, all candidates, one fact per line, in this o
 7. `Because: <decisive fact>.`
 8. `Flips if: <the one observation that would change the call>.`
 
-The decisive fact is the one whose reversal changes the call — the same fact the Flips-if clause negates. A cost number is only decisive paired with the usage count it is weighed against ("164 tok/session against 9 SEO prompts in 44 days"); a counterpart is only decisive named; a security disposition or council Error Catch is decisive as quoted. A block missing any of its eight lines is a missing block. Every other table in the report stays at 4 columns or fewer. The council section is one of: the chairman's table as candidate | call | what it changed (overlap and form already sit in each block), the open Value Tensions, and Blind Spots; or the skip reason; or the quoted decline plus your own answers to the four questions. Then ask which candidates to install and which hook adoptions to draft. Do not proceed on silence.
+The decisive fact is the one whose reversal changes the call — the same fact the Flips-if clause negates. A cost number is only decisive paired with the usage count it is weighed against ("164 tok/session against 9 SEO prompts in 44 days"); a counterpart is only decisive named; a security disposition or council Error Catch is decisive as quoted. A block missing any of its eight lines is a missing block. Every other table in the report stays at 4 columns or fewer. The council section is one of: the chairman's table as candidate | call | what it changed (overlap and form already sit in each block), the open Value Tensions, and Blind Spots; or the skip reason; or the quoted decline plus your own answers to the four questions. Then ask which candidates to install, which hook adoptions to draft, and which project-scope entries to register in REPO-SKILLS.md. Do not proceed on silence.
 
 ### 8. Install (only what was approved)
 
@@ -131,7 +131,8 @@ Per approved verdict:
 - **replace**: uninstall or disable the counterpart in the same change; record both halves in the changelog.
 - **hook**: do not install the skill. Draft the hook script and settings.json entry via the `update-config` skill, show both to the user before enabling, and keep the source SKILL.md only as a provenance reference in the changelog.
 - **hybrid**: install the skill through the channel order above AND draft the hook per the hook bullet; the changelog records both halves, and the report states which half enforces the rule and which half only explains it.
+- **project-scope**: never install anywhere in this run. Append one entry to `~/.claude/REPO-SKILLS.md` (Type, Path, Depends, What, Signals, Global state "not installed globally, not vendored", Source, Pin at the exact commit vetted in step 6, Vetted date/verdict/security notes, Enable, Cost, Refresh) from this run's step 3/4/6 data, record it in the changelog, and state in the report that `/repo-skills` installs it per project on request.
 
 ### 9. Afterwards
 
-If anything was installed or removed, suggest running `/dotfiles-release` so the change is versioned — but never run it unasked.
+If any tracked file in `~/.claude` changed (install, removal, REPO-SKILLS.md entry), suggest running `/dotfiles-release` so the change is versioned — but never run it unasked.

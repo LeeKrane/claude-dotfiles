@@ -54,7 +54,6 @@ claude plugin marketplace add JuliusBrussee/caveman
 claude plugin marketplace add obra/superpowers
 claude plugin marketplace add thedotmack/claude-mem
 claude plugin marketplace add pbakaus/impeccable
-claude plugin marketplace add Leonxlnx/taste-skill
 claude plugin marketplace add guillaumemeyer/watermarks-remover
 ```
 
@@ -63,15 +62,14 @@ claude plugin install caveman@caveman
 claude plugin install superpowers@superpowers-dev
 claude plugin install claude-mem@thedotmack
 claude plugin install impeccable@impeccable
-claude plugin install taste-skill@taste-skill
 claude plugin install watermarks-remover@watermarks-remover
 claude plugin install security-guidance@claude-plugins-official
 claude plugin install skill-creator@claude-plugins-official
 ```
 
-(`claude-plugins-official` ships with Claude Code — no `marketplace add` needed. taste-skill is installed but globally disabled in `settings.json`; re-enable per project via `.claude/settings.local.json`.)
+(`claude-plugins-official` ships with Claude Code — no `marketplace add` needed.)
 
-Verify: `claude plugin list` shows all 8, with 7 enabled and taste-skill disabled.
+Verify: `claude plugin list` shows all 7, all enabled.
 
 Note: watermarks-remover patches `settings.json` on install (adds `env.WATERMARKS_HOOK_MODE`, writes a `settings.json.bak-wm` backup). The key is already tracked, so there should be no diff. If `git -C ~/.claude status --short` shows `settings.json` modified afterwards, inspect the diff; discard with `git -C ~/.claude checkout -- settings.json` unless the change is wanted. `settings.json.bak-wm` is gitignored and can be deleted.
 
@@ -87,6 +85,10 @@ npx -y skills@latest add ngmeyer/skills --skill council-review --agent claude-co
 
 After an update run, review the diff before committing — skills are re-vetted on refresh (see CHANGELOG v3).
 
+## 6c. Repo-scoped skills
+
+`REPO-SKILLS.md` lists skills that are vetted but never installed globally (currently `video-shotcraft`, `brag`). Nothing to do on a fresh machine. In a project that wants one, run `/repo-skills` — it installs a pinned copy into that project's `.claude/skills/` only.
+
 ## 7. Verify
 
 ```
@@ -98,7 +100,7 @@ claude plugin list
 Then start `claude` in any directory and confirm:
 
 - statusline renders
-- `/cleanup-session-codebase`, `/cleanup-whole-codebase`, `/council-review`, `/context-audit` appear in the slash-command list
+- `/cleanup-session-codebase`, `/cleanup-whole-codebase`, `/council-review`, `/context-audit`, `/repo-skills` appear in the slash-command list
 - `git -C ~/.claude status --short` is empty
 - `autoMode` is not tracked; run auto-mode setup on this machine if you want it
 

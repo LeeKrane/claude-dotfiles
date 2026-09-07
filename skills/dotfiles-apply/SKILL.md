@@ -36,6 +36,7 @@ For each version from `installed + 1` up to `latest`, in order:
 2. Typical actions this may translate to:
    - New plugin marketplace: `claude plugin marketplace add <org>/<repo>`
    - New plugin: `claude plugin install <plugin>@<marketplace>`
+   - Removed plugin or marketplace: `claude plugin uninstall <plugin>@<marketplace>`, then `claude plugin marketplace remove <marketplace>` if no other plugin uses it; delete leftovers under `plugins/cache/<marketplace>/`.
    - New MCP server: `claude mcp add <name> --scope user -- <command>`
    - New CLI tool: install per the relevant `SETUP.md` step.
    - Entry is documentation-only (README wording, a note, a comment) or describes something already present: nothing to execute.

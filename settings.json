@@ -57,7 +57,6 @@
     "superpowers@superpowers-dev": true,
     "claude-mem@thedotmack": true,
     "impeccable@impeccable": true,
-    "taste-skill@taste-skill": false,
     "watermarks-remover@watermarks-remover": true,
     "security-guidance@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true
@@ -85,12 +84,6 @@
       "source": {
         "source": "github",
         "repo": "pbakaus/impeccable"
-      }
-    },
-    "taste-skill": {
-      "source": {
-        "source": "github",
-        "repo": "Leonxlnx/taste-skill"
       }
     },
     "watermarks-remover": {
