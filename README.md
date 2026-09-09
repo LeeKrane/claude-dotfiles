@@ -1,12 +1,13 @@
 # Claude Code config
 
-Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.claude`. New machine: see `SETUP.md`.
+Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.claude`. New machine: see `SETUP.md`. Which skill when: see `SKILLS.md`.
 
 ## Layout
 
 | Path | What |
 |---|---|
 | `CLAUDE.md` | Global instructions loaded into every session |
+| `SKILLS.md` | Skill routing guide: which skill for which situation, pick-one rules, catalog |
 | `settings.json` | Permissions, hooks, model, statusline, plugins |
 | `statusline-command.sh` | Statusline script (model, context fill, 5h/7d limits with ↻ reset times, pace-aware 7d color, prompt-cache flame/snowflake) |
 | `skills/cleanup-session-codebase/` | `/cleanup-session-codebase` skill (self-authored) |

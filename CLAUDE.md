@@ -41,3 +41,7 @@ No `.codegraph/`: skip CodeGraph entirely — indexing is user's decision.
 ## Shell
 
 - `cat` is aliased to `bat` on this system, which adds colorization and styling that mangles piped output (commit messages, heredocs, file contents read into context). Always invoke `/usr/bin/cat` directly, never bare `cat`.
+
+## Skills
+
+`~/.claude/SKILLS.md` maps situations to skills. Consult it when picking one; invoke on own judgment.
