@@ -16,7 +16,7 @@ installed or enabled only in the projects that want it, one of two ways:
 `/repo-skills` (`skills/repo-skills/SKILL.md`) reads this file, matches each
 entry's Signals against the current project, and applies Enable for whatever
 the user approves. `skill-scout` appends entries here whenever a candidate's
-verdict is **project-scope** (its step 8) — vetted, wanted, never global.
+verdict is **project-scope** (its step 10) — vetted, wanted, never global.
 
 Fields per entry, one per line: Type (skill | plugin | mcp), Path (subdir of
 the source holding the installable skill; `.` = repo root), Depends, What,

@@ -1,7 +1,7 @@
 ---
 name: skill-scout
-description: "Research, evaluate, and vet Claude Code skills/plugins against the user's actual usage before installing anything. Use when the user says 'scout skills', 'evaluate this skill/plugin', 'audit my skills', 'compare skills against my usage', 'should I install <skill or plugin>', or asks whether a specific skill/plugin repo is worth adopting. Do NOT trigger on general conversation about skills, on authoring new skills, or on plain installation requests where the user has already decided."
-argument-hint: "[skill/plugin/repo URL(s), or a work area to find skills for] [--no-discovery] [--no-council]"
+description: "Research, evaluate, and vet Claude Code skills/plugins against the user's actual usage before installing anything. Use when the user says 'scout skills', 'evaluate this skill/plugin', 'audit my skills', 'compare skills against my usage', 'should I install <skill or plugin>', or asks whether a specific skill/plugin repo is worth adopting, or wants to search for skills on findskills.org / skills.sh / GitHub and vet the ones worth installing. Do NOT trigger on general conversation about skills, on authoring new skills, or on plain installation requests where the user has already decided."
+argument-hint: "[skill/plugin/repo URL(s), or a work area or search terms] [--no-discovery] [--no-council]"
 ---
 
 # Skill Scout
@@ -12,13 +12,18 @@ The default run is **analyze, then ask**. Never install, modify settings, or wri
 
 ## Pipeline
 
+The pipeline runs in two stages. Stage 1 — Find is cheap: it searches findskills.org, skills.sh, and other sources for candidates and ends with the user picking which ones are worth a closer look. Stage 2 — Vet is the existing evaluate-and-install pipeline, and it runs only on those picks: a council debate and a security scan cost real agent calls per candidate, and that cost is worth spending once the user has already seen enough about a candidate to want it looked at closely — not on every hit a search happens to turn up.
+
+**Stage 1 — Find** (cheap: no council, no security scan, no clones)
+
 ### 1. Scope
 
-Two modes, decided by the input:
-- **Targeted**: the user names specific skills, plugins, or repo URLs → evaluate exactly those.
-- **Discovery**: the user names a work area or asks what would help them → search for candidates first (WebSearch/WebFetch; skill collections on GitHub, plugin marketplaces, skills.sh). `--no-discovery` forces targeted mode.
+Modes decided by the input:
+- **Targeted**: the input is a URL, `owner/repo`, `owner/repo@skill`, or a name matching an installed or marketplace skill — a product or topic word ("remotion", "seo") is Discovery, not Targeted. Named items are always listed first in Pick and enter Stage 2 unless the user unchecks them there; Search only adds alternatives from the same niche. `--no-discovery` skips Search and Pick entirely and vets exactly the named items (old behavior).
+- **Discovery**: the user names a work area, gives search terms, or asks what would help. Search runs on those terms.
+- **Bare invocation** (no args): Search runs on terms derived from the usage profile.
 
-If the request is ambiguous between the two, ask one clarifying question before burning research time.
+If the request is ambiguous between modes, ask one clarifying question before burning research time.
 
 ### 2. Usage profile (what the user actually does)
 
@@ -28,9 +33,49 @@ A skill is only worth its context cost if it maps to recurring, evidenced work. 
 
 Cite concrete numbers (prompt counts, session counts, repeated-request counts). Delegate this mining to subagents so the main context stays small. If claude-mem holds a scout run from the last 7 days, reuse its profile and cite that session's date; otherwise re-mine.
 
-### 3. Setup inventory + overlap matrix
+### 3. Search
 
-List what is already installed: enabled plugins (`settings.json` enabledPlugins + plugin cache), `~/.claude/skills/`, built-in commands. Then, for EVERY candidate, classify overlap as **FULL** (an installed tool already does this — name it), **PARTIAL** (name what's shared and what's not), or **NONE**. Overlap claims must name the specific counterpart; verify by reading descriptions, not by guessing from names — this session-type work has produced wrong FULL/PARTIAL calls from name-matching before.
+List what is already installed before searching, once: enabled plugins (`settings.json` enabledPlugins + plugin cache), `~/.claude/skills/`, built-in commands. Step 5 reuses this inventory rather than rebuilding it.
+
+Query terms, at most 3 per round:
+- **Targeted**: read each named repo's SKILL.md description and tags, derive 2-3 niche terms.
+- **Work area / explicit terms**: use the user's terms as given; more than 3 → the first 3 now, the rest queued for Pick's "refine terms".
+- **Bare**: pull 3-5 gap terms from the usage profile — recurring workflows with no installed counterpart — and confirm with one AskUserQuestion (multiSelect, terms as options, an Other option), narrowed to 3.
+
+Each round queries at most 3 terms, once each on findskills and skills.sh — 6 queries a round across tiers 1-2; tier 3 fallback adds at most one WebSearch per under-populated term. Each refine round (step 4) gets its own 3-term budget; at most 3 Search rounds per run in total, the initial round included.
+
+Sources, tier order:
+1. **findskills API**: `curl -sS -m 30 -H "Authorization: Bearer $FINDSKILLS_API_KEY" 'https://findskills.org/api/v1/search?q=<term>&limit=10'` → JSON `{"skills":[{id,name,description,tags,category,safety_label}], next, prev}`; a key returns full fields (url/author/stars) too. Get a free key with `npx findskills auth` or findskills.org/developers (GitHub sign-in) — without one, expect exactly one guest query before `401 {"error":"registration_required","reason":"quota_exhausted_fp"}`, then treat findskills as unavailable for the rest of the run. It fuzzy-matches (`remote-*` back for "remotion"); drop hits whose name or description doesn't contain the term as a whole word before pre-rank. Resolve a guest hit's repo URL with one GitHub API search — `curl -sS "https://api.github.com/search/repositories?q=<name>+in:name&per_page=3"` — else mark it "url unresolved".
+2. **skills.sh**: `npx -y skills@latest find <term> 2>&1 | sed 's/\x1b\[[0-9;]*m//g'` → lines of `owner/repo@skill  N installs  URL`. The install path later is `npx skills add owner/repo@skill`.
+3. **Existing sources** (WebSearch/WebFetch, GitHub skill collections, plugin marketplaces) — only when tiers 1-2 together return fewer than 4 unique hits for a term.
+
+Delegate a round to one subagent (haiku-class), all its terms in one batch call — `npx skills find` runs ~100s/term, so batching and backgrounding matter — returning only one deduplicated list: `owner/repo@skill | one-line what | installs or stars | source(s) | url`. If a source errors or quota-locks mid-round, it skips that source for the rest of the run and says so for Pick's question text ("findskills locked after 1 query; 2 terms searched on skills.sh only"); partial results are always presented as partial.
+
+Dedupe and suppress before Pick: drop anything already in `~/.claude/skills/`, in `enabledPlugins`, named on a do-not-re-evaluate list in memory (`~/.claude/projects/*/memory/skill-audit-verdict-*.md`, `skill-scout-verdict-*.md`), or covered by a claude-mem scout run from the last 30 days — suppressed items never become options; state the count and names in Pick's first question ("hidden: 4 installed, 6 skipped 2026-09-07 (hyperframes@*)"). User-named items in Targeted mode are exempt from suppression: always listed, with any prior verdict in the option description ("already project-scope, vetted 2026-09-07").
+
+Cheap pre-rank for ordering only, not the Stage 2 score: term match, then installs/stars, then findskills' safety_label. No overlap analysis, no council, no cloning here — that's Stage 2's job.
+
+If every source fails, or total resolvable hits land under 2: Targeted skips straight to Stage 2 with the named items and notes Search came back empty; Discovery and Bare invocation report the failure and stop — no Pick call.
+
+### 4. Pick
+
+Before asking, grep `~/.claude/REPO-SKILLS.md` headings and Signals for the round's terms; matching entries are named in the first question's text as "already registered, `/repo-skills` installs it" — not offered as options unless user-named.
+
+Present hits with one AskUserQuestion call: up to 4 questions, 2-4 options each, grouped by query term (header = the term). Only hits with a resolved repo URL become options; unresolved ones are counted in the question text ("3 findskills hits unresolved, name one via Other with its URL to include it") — every pick ending up with a resolvable URL is a consequence of that, not an assumption going in. Terms with fewer than 2 resolvable hits merge into one "Other hits" question; more than 3 term groups push the extra groups to the next "show next 12" page. Option label is `owner/repo@skill` (or the plugin name); option description is one-line what + installs/stars + source. In Targeted mode the named items are the first options of the first question, so unchecking one drops it from the run.
+
+A fourth question, single-select, header "Next": vet selected / show next 12 / refine terms / stop.
+
+Loop the pick: "show next 12" re-asks with the next slice, including any term groups deferred for space; "refine terms" first offers any queued overflow terms as options, then asks for new ones via Other — each round gets its own 3-term budget — and re-runs Search; at most 3 Search rounds per run in total, the initial round included, then stop and ask in plain text what to do instead. "vet selected" with zero candidates checked: re-ask once, then stop. "stop": end the run with nothing vetted, and print the full hit list once so the search wasn't wasted.
+
+Why AskUserQuestion and not a printed list: the run is otherwise unattended, and this is the one point where the user's judgment is cheap and the vetting cost is not yet spent.
+
+Output of this step: the picked candidates, each already carrying a resolvable repo URL. They enter Stage 2 exactly as Targeted candidates did before this split. Cloning into `~/.cache/skill-scout/<date>/` still happens in Stage 2 (the security gate), not here.
+
+**Stage 2 — Vet** (existing pipeline, only on picked candidates)
+
+### 5. Setup inventory + overlap matrix
+
+Reuse the inventory step 3 builds. Then, for EVERY candidate, classify overlap as **FULL** (an installed tool already does this — name it), **PARTIAL** (name what's shared and what's not), or **NONE**. Overlap claims must name the specific counterpart; verify by reading descriptions, not by guessing from names — this session-type work has produced wrong FULL/PARTIAL calls from name-matching before.
 
 **Replacement comparison.** Every FULL or PARTIAL candidate gets a head-to-head against its named counterpart — one row per measure, exactly three columns: measure | candidate | counterpart:
 
@@ -41,20 +86,20 @@ List what is already installed: enabled plugins (`settings.json` enabledPlugins 
 | Does that the other lacks | capability delta, each direction, from reading both bodies |
 | Trigger quality | how precisely the description fires; known false-trigger history |
 | Provenance | maintainer, last commit, install channel, update path |
-| Security | Candidate: "pending step 6", filled in before the report. Counterpart: vet date from its provenance comment or changelog entry, else "installed, not re-vetted" |
+| Security | Candidate: "pending step 8", filled in before the report. Counterpart: vet date from its provenance comment or changelog entry, else "installed, not re-vetted" |
 
 End each comparison with one call: **keep**, **replace**, **alongside**, **skip**, or **project-scope** (vetted, wanted in one repo only — registered in REPO-SKILLS.md, never installed globally) — with the single decisive reason. "Replace" means the counterpart is removed on install; say what is lost.
 
-### 4. Ranking + per-candidate briefing
+### 6. Ranking + per-candidate briefing
 
-Score each candidate: **fit** (1–5, matches the usage profile's evidence) × **benefit** (1–5, fills a real gap) − **overlap penalty** (NONE 0, PARTIAL 2, FULL 4) − **token penalty** (net always-on tokens after subtracting a replaced counterpart: under 50 → 0, under 150 → 1, under 400 → 2, more → 3). Token cost is a real term, not a tiebreaker: an always-on description that fires rarely is a bad trade even with NONE overlap. Rank ALL candidates, none omitted. Every candidate appears in the step-7 per-candidate block; the full briefing below is only for NONE candidates and for FULL/PARTIAL candidates whose step-3 call is not **skip**.
+Score each candidate: **fit** (1–5, matches the usage profile's evidence) × **benefit** (1–5, fills a real gap) − **overlap penalty** (NONE 0, PARTIAL 2, FULL 4) − **token penalty** (net always-on tokens after subtracting a replaced counterpart: under 50 → 0, under 150 → 1, under 400 → 2, more → 3). Token cost is a real term, not a tiebreaker: an always-on description that fires rarely is a bad trade even with NONE overlap. Rank ALL candidates, none omitted. Every candidate appears in the step-9 per-candidate block; the full briefing below is only for NONE candidates and for FULL/PARTIAL candidates whose step-5 call is not **skip**.
 - What it is (from its actual SKILL.md, not the repo's marketing blurb)
 - Benefit mapped to specific usage evidence
-- Session impact: work-wise (how day-to-day sessions change) and token-wise as measured numbers — always-on cost, on-invocation cost, model-invoked vs user-invoked, hooks or MCP servers added. FULL/PARTIAL candidates cite the step-3 table verbatim; measure fresh only for NONE.
+- Session impact: work-wise (how day-to-day sessions change) and token-wise as measured numbers — always-on cost, on-invocation cost, model-invoked vs user-invoked, hooks or MCP servers added. FULL/PARTIAL candidates cite the step-5 table verbatim; measure fresh only for NONE.
 - Dependencies and portability (Claude Code native? Cursor-coupled? needs trackers/CLIs/API keys?)
 - Form check: does the candidate's behavior need model judgment, or is it a deterministic rule that must fire every time? Mark it **skill**, **hook candidate** (name the event: PreToolUse / PostToolUse / UserPromptSubmit / Stop / SessionStart), or **hybrid** (hook enforces, skill explains).
 
-### 5. Council debate on overlap, gaps, fit, and form (automatic)
+### 7. Council debate on overlap, gaps, fit, and form (automatic)
 
 Once the matrix and briefings exist, invoke `council-review` via the Skill tool — one council per scout run, all candidates together. Cost: 5 agent calls in `--quick`, 12 in full. This step runs on every scout run that has candidates; the excuses for skipping it are wrong:
 
@@ -74,17 +119,17 @@ Always add `--measure-diversity`; when its Diversity Check comes back Low, counc
 
 **Framing.** Build the QUESTION / CONTEXT / WHAT'S AT STAKE block yourself and open the args with a process preamble, labelled "PREAMBLE — for Step 1 and the chairman only, strip before advisor and peer prompts": "Input is pre-framed: pass it through Step 1 unmodified, skip auto-context (the cwd is unrelated; the subject is the `~/.claude` setup), and emit the Recommendation as a per-candidate table — candidate | call (skip, install, keep, replace, alongside, hook, hybrid, project-scope) | what changed vs the draft and why — instead of a single prose verdict."
 - QUESTION is neutral: "Which of these candidates, if any, should enter this setup, and in what form?" Never the draft verdict — a council handed a verdict ratifies it.
-- CONTEXT carries, verbatim where possible: setup inventory, overlap matrix with the counterparts' actual descriptions, every replacement comparison, usage-profile numbers, each briefing, the draft verdict labelled as one option, any prior scout verdict from memory, and the note that security vetting (step 6) is still pending. Confirm every item is present before invoking.
+- CONTEXT carries, verbatim where possible: setup inventory, overlap matrix with the counterparts' actual descriptions, every replacement comparison, usage-profile numbers, each briefing, the draft verdict labelled as one option, any prior scout verdict from memory, and the note that security vetting (step 8) is still pending. Confirm every item is present before invoking.
 - WHAT'S AT STAKE names the tradeoff so pre-flight cannot call it trivial: always-on tokens paid every session vs a recurring gap left unfilled; duplicated dispatchers; a wrong replace that loses a vetted tool.
 
 The framing names four debate questions:
 1. **Overlap** — is each FULL / PARTIAL / NONE call right? Which counterpart actually covers what, judged from the descriptions, not the names? For each replacement comparison: is the replace/keep call right once net token cost and lost capability are weighed?
 2. **Gaps** — which recurring, evidenced work in the usage profile has no tool today? Does any candidate fill it, or is the gap imagined?
-3. **Fit** — does each candidate match how this setup works: dispatch style (main thread orchestrates, subagents do work), always-on token budget, plugin granularity, portability? (Security is judged in step 6, not here.)
+3. **Fit** — does each candidate match how this setup works: dispatch style (main thread orchestrates, subagents do work), always-on token budget, plugin granularity, portability? (Security is judged in step 8, not here.)
 4. **Form** — for each hook candidate or hybrid: is a hook the better home? Would the hook's rule ever be wrong to enforce unconditionally? What does the setup lose if the model never reads the skill's reasoning?
 
 **Consuming the verdict** (section names are council-review's chairman output):
-- Recommendation table rows override the draft: correct the matrix and ranking, mark each changed cell "(council-corrected)" with the reason. If the chairman ignored the table request and wrote prose, extract per-candidate calls from it and mark any candidate it does not name "council-unreviewed". Form is read from the call column (hook / hybrid) or the prose; if neither says anything about form, the step-4 classification stands.
+- Recommendation table rows override the draft: correct the matrix and ranking, mark each changed cell "(council-corrected)" with the reason. If the chairman ignored the table request and wrote prose, extract per-candidate calls from it and mark any candidate it does not name "council-unreviewed". Form is read from the call column (hook / hybrid) or the prose; if neither says anything about form, the step-6 classification stands.
 - Under "Where the Council Clashes": **[Error Catch]** items are corrections; **[Value Tension]** items stay open in the report for the user. A converged council has neither — record "council converged, no corrections".
 - "Blind Spots Revealed" feeds the Gaps section of the report.
 - "What You Lose" attaches to the briefing of the candidate it concerns.
@@ -92,7 +137,7 @@ The framing names four debate questions:
 - Pre-flight decline ("doesn't need a council"): quote in the report the QUESTION and WHAT'S AT STAKE sent plus the decline verbatim (reference CONTEXT, do not reprint it), then answer the four questions yourself as recorded open risks. Never reword and re-send to obtain a decline; never re-invoke.
 - The verdict is input to the report, never a trigger to install.
 
-### 6. Security gate (mandatory before any install)
+### 8. Security gate (mandatory before any install)
 
 No candidate is installed without BOTH:
 1. **SkillSpector scan** (`skillspector scan <dir> --no-llm --format json --output <file>` per skill dir). Static mode over-flags conversational instructions and a clean scan proves little. Each finding gets one of two dispositions in the report: quoted with the reason it is a false positive, or escalated for the user to rule on before install. None is dropped silently.
@@ -100,7 +145,7 @@ No candidate is installed without BOTH:
 
 Verify installed files match what was vetted (clone at a pinned commit, diff after install). Both requirements apply to hook-bound candidates too — the source SKILL.md's rule becomes the script.
 
-### 7. Report, then stop
+### 9. Report, then stop
 
 Present: usage-profile evidence, setup inventory, the ranked list, replacement comparisons, form verdicts (skill / hook / hybrid), briefings, security dispositions, and a council section.
 
@@ -116,7 +161,7 @@ The ranked list is a numbered list, all candidates, one fact per line, in this o
 
 The decisive fact is the one whose reversal changes the call — the same fact the Flips-if clause negates. A cost number is only decisive paired with the usage count it is weighed against ("164 tok/session against 9 SEO prompts in 44 days"); a counterpart is only decisive named; a security disposition or council Error Catch is decisive as quoted. A block missing any of its eight lines is a missing block. Every other table in the report stays at 4 columns or fewer. The council section is one of: the chairman's table as candidate | call | what it changed (overlap and form already sit in each block), the open Value Tensions, and Blind Spots; or the skip reason; or the quoted decline plus your own answers to the four questions. Then ask which candidates to install, which hook adoptions to draft, and which project-scope entries to register in REPO-SKILLS.md. Do not proceed on silence.
 
-### 8. Install (only what was approved)
+### 10. Install (only what was approved)
 
 Channel preference, in order — use the first that actually works for the candidate:
 1. **Official Claude Code plugin marketplace** (`claude plugin marketplace add` + `claude plugin install`) — but check granularity first: plugins install whole; if that drags in unwanted skills (a second dispatcher, duplicates), prefer the next channel.
@@ -131,8 +176,8 @@ Per approved verdict:
 - **replace**: uninstall or disable the counterpart in the same change; record both halves in the changelog.
 - **hook**: do not install the skill. Draft the hook script and settings.json entry via the `update-config` skill, show both to the user before enabling, and keep the source SKILL.md only as a provenance reference in the changelog.
 - **hybrid**: install the skill through the channel order above AND draft the hook per the hook bullet; the changelog records both halves, and the report states which half enforces the rule and which half only explains it.
-- **project-scope**: never install anywhere in this run. Append one entry to `~/.claude/REPO-SKILLS.md` (Type, Path, Depends, What, Signals, Global state "not installed globally, not vendored", Source, Pin at the exact commit vetted in step 6, Vetted date/verdict/security notes, Enable, Cost, Refresh) from this run's step 3/4/6 data, record it in the changelog, and state in the report that `/repo-skills` installs it per project on request.
+- **project-scope**: never install anywhere in this run. Append one entry to `~/.claude/REPO-SKILLS.md` (Type, Path, Depends, What, Signals, Global state "not installed globally, not vendored", Source, Pin at the exact commit vetted in step 8, Vetted date/verdict/security notes, Enable, Cost, Refresh) from this run's step 5/6/8 data, record it in the changelog, and state in the report that `/repo-skills` installs it per project on request.
 
-### 9. Afterwards
+### 11. Afterwards
 
 If any tracked file in `~/.claude` changed (install, removal, REPO-SKILLS.md entry), suggest running `/dotfiles-release` so the change is versioned — but never run it unasked.

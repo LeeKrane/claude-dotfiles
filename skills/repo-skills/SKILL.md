@@ -44,4 +44,4 @@ Applied entries + how, skipped + why, `Depends` follow-ups.
 - Never edit `~/.claude` beyond reading `REPO-SKILLS.md`.
 - Never commit inside the target project.
 - Never substitute another commit for the pin.
-- Never append registry entries — that is skill-scout's job (its step 6 security gate makes the Vetted field trustworthy); no `--add` flag.
+- Never append registry entries — that is skill-scout's job (its step 8 security gate makes the Vetted field trustworthy); no `--add` flag.

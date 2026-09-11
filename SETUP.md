@@ -85,6 +85,8 @@ npx -y skills@latest add ngmeyer/skills --skill council-review --agent claude-co
 
 After an update run, review the diff before committing — skills are re-vetted on refresh (see CHANGELOG v3).
 
+skill-scout's Find stage also calls `npx skills find <term>` (same CLI, already covered above) and, for higher-volume search, the findskills.org API. Optionally set `FINDSKILLS_API_KEY` (free key via `npx findskills auth` or findskills.org/developers) — without it, Find still works but findskills allows only one guest query per run before rate-limiting.
+
 ## 6c. Repo-scoped skills
 
 `REPO-SKILLS.md` lists skills that are vetted but never installed globally (currently `video-shotcraft`, `brag`). Nothing to do on a fresh machine. In a project that wants one, run `/repo-skills` — it installs a pinned copy into that project's `.claude/skills/` only.

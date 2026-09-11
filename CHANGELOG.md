@@ -2,6 +2,23 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v12 — 2026-09-11
+
+skill-scout split into two stages. Stage 1 Find (new steps 3-4, no
+council or security gate) searches findskills.org's API and skills.sh's
+`npx skills find` CLI for candidates, falling back to WebSearch/WebFetch
+only when both together return fewer than 4 unique hits per term; the
+user then picks which candidates are worth vetting via AskUserQuestion,
+with a refine-terms loop capped at 3 search rounds per run. Stage 2 Vet
+is the former pipeline (setup inventory, ranking, council-review,
+SkillSpector security gate, install) unchanged except it now runs only
+on picks, and its steps renumbered 3-9 to 5-11. New optional env var
+`FINDSKILLS_API_KEY` (free key via `npx findskills auth` or
+findskills.org/developers) lifts findskills' one-guest-query-per-run
+cap; without it Find still runs, just rate-limited. REPO-SKILLS.md and
+skills/repo-skills/SKILL.md cross-refs updated for the renumbering
+(project-scope verdict step 8 -> 10, security gate step 6 -> 8).
+
 ## v11 — 2026-09-07
 
 New repo-scoped skills registry (`REPO-SKILLS.md`, root, tracked) and its
