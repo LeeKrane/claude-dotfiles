@@ -71,7 +71,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 
 ## Skills & commands
 
-Some skills are *repo-scoped*: vetted and wanted, but deliberately never installed or enabled globally. They are recorded in `REPO-SKILLS.md` (source, pinned commit, signals, enable recipe) and installed per project by `/repo-skills`. Currently: `video-shotcraft`, `brag`.
+Some skills are *repo-scoped*: vetted and wanted, but deliberately never installed or enabled globally. They are recorded in `REPO-SKILLS.md` (source, pinned commit, signals, enable recipe) and installed per project by `/repo-skills`. Currently: `video-shotcraft`, `brag`, `obsidian-notes-creator`.
 
 ### Self-authored skills
 

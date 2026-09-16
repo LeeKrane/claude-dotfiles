@@ -51,3 +51,18 @@ Signals, Global state, Source, Pin, Vetted, Enable (for `plugin` type: a literal
 - Enable: shallow-fetch Pin into a scratch dir, copy `skills/brag` to `<project>/.claude/skills/brag`, remove scratch (fast path: copy from `~/.cache/skill-scout/2026-09-07/D/latent-spaces-brag/skills/brag` if HEAD equals Pin and its tree is clean)
 - Cost: 77 tok always-on when enabled; ~17.6–19.4k tok per invocation
 - Refresh: re-run skill-scout on latent-spaces/brag, re-diff Pin, re-measure Hyperframes description cost
+
+## obsidian-notes-creator
+
+- Type: skill
+- Path: `skills/obsidian-notes-creator`
+- Depends: none (output is plain markdown; Obsidian-flavoured callouts/wikilinks/Mermaid render best in Obsidian)
+- What: creates high-quality Obsidian study notes with analogies, diagrams, and structured explanations, for single notes or multi-file topic sets
+- Signals: lecture slides/PDFs/course material in the repo; user asks for study notes, lecture summaries, exam prep notes, "study notes", "note from lecture", "note from PDF"
+- Global state: not installed globally, not vendored into this repo
+- Source: https://github.com/szeyu/vibe-study-skills
+- Pin: `be514bd78b3b3285db061f5828ae26007466af1f`
+- Vetted: 2026-09-11, skill-scout + council. SkillSpector 20/LOW, 1 finding (MP3 Memory Manipulation quoting "clear state" at `references/components/diagrams.md:13`, a Mermaid stateDiagram-v2 table entry) = false positive; manual read of all 13 files clean (no exec, network, credentials, anti-refusal); single maintainer consolidated 14 skills into this one 2026-06-11 (commit 169c958), skills.sh index still lists the deleted names; council `--quick` diversity LOW corrected draft global→project-scope
+- Enable: shallow-fetch Pin into a scratch dir, copy `skills/obsidian-notes-creator` to `<project>/.claude/skills/obsidian-notes-creator`, remove scratch (fast path: copy from `~/.cache/skill-scout/2026-09-11/A/skills/obsidian-notes-creator` if HEAD equals Pin and tree is clean)
+- Cost: 107 tok always-on when enabled; SKILL.md ≈0.9k tok + references/ ≈9.7k tok (≈10.6k total if all 12 refs load; loaded selectively)
+- Refresh: re-run skill-scout on szeyu/vibe-study-skills, diff against Pin (note: upstream renames skills without notice — verify the skill dir still exists)

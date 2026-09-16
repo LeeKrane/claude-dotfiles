@@ -89,7 +89,7 @@ skill-scout's Find stage also calls `npx skills find <term>` (same CLI, already 
 
 ## 6c. Repo-scoped skills
 
-`REPO-SKILLS.md` lists skills that are vetted but never installed globally (currently `video-shotcraft`, `brag`). Nothing to do on a fresh machine. In a project that wants one, run `/repo-skills` — it installs a pinned copy into that project's `.claude/skills/` only.
+`REPO-SKILLS.md` lists skills that are vetted but never installed globally (currently `video-shotcraft`, `brag`, `obsidian-notes-creator`). Nothing to do on a fresh machine. In a project that wants one, run `/repo-skills` — it installs a pinned copy into that project's `.claude/skills/` only.
 
 ## 7. Verify
 

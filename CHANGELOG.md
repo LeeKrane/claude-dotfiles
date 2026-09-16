@@ -2,6 +2,17 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v13 — 2026-09-16
+
+skill-scout run 2026-09-11 for study/exam-prep skills.
+obsidian-notes-creator (szeyu/vibe-study-skills @ be514bd) registered
+project-scope in REPO-SKILLS.md and installed into bsc-ba. Skipped
+szeyu/vibe-study-skills@exam-prep (deleted upstream, generic prose),
+anthropics/claude-for-legal@study-plan (bar-exam logic,
+plugin-coupled), and @exam-forecast (no past exams available;
+revisit if they appear). Council `--quick` diversity LOW. No global
+install; nothing to do on other machines beyond pulling the registry.
+
 ## v12 — 2026-09-11
 
 skill-scout split into two stages. Stage 1 Find (new steps 3-4, no
