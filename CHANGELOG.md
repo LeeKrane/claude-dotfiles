@@ -2,6 +2,29 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v14 — 2026-09-22
+
+dotfiles-release gains a mandatory step 1 "Sync with the remote first":
+`git fetch origin`, compare `HEAD` against `origin/main` and the remote
+`CHANGELOG.md`'s topmost version against the local one; if the remote
+has commits local lacks or a higher version, refuse to release and tell
+the user to `git pull`, `/dotfiles-apply`, then re-run. Fetch failure
+also stops the release. Former steps 1-7 renumbered 2-8; final report
+now states the remote was checked. README skill description updated.
+
+CLAUDE.md Shell rule rewritten portable: `cat` may be aliased to `bat`
+in fish, zsh, or bash depending on machine; always use `command cat`
+(bypasses aliases and functions in every shell) instead of the old
+`/usr/bin/cat`, which does not exist on NixOS. Peer-verified on this
+machine: alias lives only in interactive fish, `command cat` resolves
+to coreutils in fish, zsh, bash, and the Bash tool shell. README
+CLAUDE.md summary updated to match.
+
+Machine note: this NixOS host lacked the `codegraph` MCP server (SETUP
+step 5, part of the v1 baseline); registered with
+`claude mcp add codegraph --scope user -- codegraph serve --mcp`. Other
+machines: verify `claude mcp list` shows `codegraph`, register if not.
+
 ## v13 — 2026-09-16
 
 skill-scout run 2026-09-11 for study/exam-prep skills.

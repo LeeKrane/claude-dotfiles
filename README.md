@@ -67,7 +67,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 - **RTK** — prefer Bash over Read/Grep/Glob so the RTK hook can rewrite calls for compact output; use `rtk lint`/`rtk tsc` for grouped errors.
 - **Git & PRs** — no PRs and no pushes unless explicitly asked; commit messages are subject-only, no body; never add `Co-Authored-By: Claude` or other Claude/Anthropic attribution.
 - **CodeGraph** — the block between the `CODEGRAPH_START`/`CODEGRAPH_END` markers is written by the `codegraph` installer; applies only in repos with `.codegraph/`.
-- **Shell** — `cat` is aliased to `bat` on the origin machine, which corrupts piped output; always call `/usr/bin/cat` directly.
+- **Shell** — `cat` may be aliased to `bat` (fish/zsh/bash, machine-dependent), which corrupts piped output; always call `command cat` to bypass any alias or function.
 
 ## Skills & commands
 
@@ -78,7 +78,7 @@ Some skills are *repo-scoped*: vetted and wanted, but deliberately never install
 - `/cleanup-session-codebase` — reviews the session's diff and removes dead code, debug logging, and orphaned files/tests; double-checks every finding before deleting.
 - `/cleanup-whole-codebase` — same cleanup across the entire repo, not just the session's diff; double-checks every finding before deleting.
 - `/dotfiles-apply` — after a `git pull`, brings this machine up to date with any pending `CHANGELOG.md` versions.
-- `/dotfiles-release` — after editing this repo, bumps the version, drafts a `CHANGELOG.md` entry, syncs README/SETUP, and commits (never pushes).
+- `/dotfiles-release` — after editing this repo, fetches the remote (refuses if a newer version exists upstream), bumps the version, drafts a `CHANGELOG.md` entry, syncs README/SETUP, and commits (never pushes).
 - `skill-scout` — two-stage. Find searches findskills.org's API and skills.sh's `npx skills find` (WebSearch/WebFetch fallback) for candidate skills/plugins, and the user picks which are worth a closer look via AskUserQuestion; Vet then evaluates only those picks against real usage data: overlap matrix with replacement comparisons (measured always-on and on-invocation token cost, capability delta, keep/replace/alongside/skip), scaled fit/benefit/overlap/token scoring, skill-vs-hook form check, then an automatic `council-review` debate on overlap, gaps, fit, and form (`--no-council` to opt out), SkillSpector + manual security gate, and channel-ordered install with keep/alongside/replace/hook/hybrid branches — reporting before anything is installed, as a per-candidate one-fact-per-line list (description, overlap, cost, form, score, call, because, flips-if). Also `/skill-scout`.
 - `/repo-skills` — reads `REPO-SKILLS.md`, matches each entry's signals (deps, files, user phrasing) against the current project, reports a match table, and on approval installs a pinned copy under the project's `.claude/skills/<name>/` (excluded via `.git/info/exclude`) or re-enables a plugin in its `.claude/settings.local.json`. Never global. `--list` reports without changing anything.
 

@@ -40,4 +40,4 @@ No `.codegraph/`: skip CodeGraph entirely — indexing is user's decision.
 
 ## Shell
 
-- `cat` is aliased to `bat` on this system, which adds colorization and styling that mangles piped output (commit messages, heredocs, file contents read into context). Always invoke `/usr/bin/cat` directly, never bare `cat`.
+- `cat` may be aliased to `bat` (fish, zsh, or bash depending on machine), which mangles piped output. Always invoke `command cat`, never bare `cat` — `command` bypasses aliases and functions in every shell, and works whether or not an alias exists.
