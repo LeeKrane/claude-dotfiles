@@ -1,10 +1,10 @@
 ---
 name: dotfiles-release
-description: "Release a new dotfiles version: fetch the remote and refuse if a newer version exists upstream, inspect changes in ~/.claude, bump the version, draft a CHANGELOG.md entry, sync README/SETUP, update the local version marker, and commit without pushing. Use only when explicitly invoked via /dotfiles-release."
+description: "Release a new dotfiles version: fetch the remote and refuse if a newer version exists upstream, inspect changes in ~/.claude, bump the version, draft a CHANGELOG.md entry, sync README/SETUP, update the local version marker, commit, and push to origin. Use only when explicitly invoked via /dotfiles-release."
 disable-model-invocation: true
 ---
 
-Release a new dotfiles version: fetch the remote and refuse if a newer version exists upstream, inspect what changed in `~/.claude`, bump the version, draft a `CHANGELOG.md` entry, bring `README.md` and `SETUP.md` in line with the changes, update the local version marker, and commit — without pushing.
+Release a new dotfiles version: fetch the remote and refuse if a newer version exists upstream, inspect what changed in `~/.claude`, bump the version, draft a `CHANGELOG.md` entry, bring `README.md` and `SETUP.md` in line with the changes, update the local version marker, commit, and push to `origin`.
 
 ## 1. Sync with the remote first
 
@@ -65,12 +65,12 @@ If nothing in a file is affected, say so and move on — don't rewrite for its o
 
 Write the new version number alone to `~/.claude/.dotfiles-version`. The machine drafting the release is by definition already current at the new version.
 
-## 8. Commit
+## 8. Commit and push
 
 Stage the changelog, the doc updates from step 6, and any other changes covered by this release, and commit with a subject-only message (no body, no `Co-Authored-By` or other Claude/Anthropic attribution — per `CLAUDE.md`). Example subject: `Release v<N>: <short summary>`.
 
-**Never push.** Leave the push to the user.
+Then push: `git push origin main`. Step 1 already proved the remote holds nothing newer, so this cannot clobber another machine's release. If the push is rejected (non-fast-forward: someone released in the meantime) or fails (offline, auth): do not force, do not retry with different flags; leave the commit local and report the exact error — the user pulls/rebases and re-runs.
 
 ## Final report
 
-State that the remote was fetched and no newer upstream version existed. State the new version number, the changelog entry drafted, and that the commit was made locally only (not pushed).
+State that the remote was fetched and no newer upstream version existed. State the new version number, the changelog entry drafted, and whether the push succeeded (or the exact push error, if not).

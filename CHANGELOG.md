@@ -2,6 +2,18 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v16 — 2026-09-22
+
+dotfiles-release now pushes: step 8 renamed "Commit and push" and ends
+with `git push origin main` after the commit. Safe because step 1 (v14)
+already fetched and refused if the remote held anything newer; on a
+rejected or failed push the skill leaves the commit local, never forces
+or retries, and reports the exact error for the user to pull/rebase and
+re-run. Final report states push outcome. CLAUDE.md "Git & PRs" gains
+the matching exception to "never push unless explicitly asked" for
+/dotfiles-release only. README skill description updated. No plugin,
+marketplace, MCP, hook, or settings changes.
+
 ## v15 — 2026-09-22
 
 settings.json: `permissions.defaultMode` set to `auto` (user scope, so it

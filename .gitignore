@@ -26,3 +26,5 @@ settings.json.bak*
 
 # machine-local installed dotfiles version (never track)
 .dotfiles-version
+# skills auto-synced from claude.ai (runtime cache)
+skills/synced/

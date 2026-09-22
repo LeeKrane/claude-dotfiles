@@ -23,7 +23,7 @@ RTK hook rewrites Bash. Prefer Bash over Read/Grep/Glob for file ops so it kicks
 ## Git & PRs
 
 - Never create a pull request unless I explicitly ask for one.
-- Never push to a remote unless I explicitly ask.
+- Never push to a remote unless I explicitly ask. Exception: `/dotfiles-release` pushes as its final step (it fetches and refuses stale releases first).
 - Commit messages: subject line only, no body. Keep it concise but informative — what changed, not how.
 - Never add `Co-Authored-By: Claude` or any Claude/Anthropic attribution to commits.
 
