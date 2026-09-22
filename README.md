@@ -36,7 +36,8 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 - `permissions.allow`: `mcp__codegraph__*`, `Bash(rtk read *)`, `Bash(rtk grep *)`
 - `permissions.deny`: Read/Grep on `node_modules/`, `.nuxt/`, `.output/`, `dist/`, `.data/`, `.cache/`
 - `permissions.defaultMode`: `auto` — safety classifier approves routine actions instead of prompting; falls back to default mode with a notice where auto mode is unavailable
-- `model`: `fable`
+- `model`: `opus[1m]` (Opus 5.5, 1M context)
+- `modelSettings`: pins Opus 5.5 effort to `medium` (its default; set via `/model`)
 - `autocompactPercentageOverride`: `75`
 - `inputNeededNotifEnabled`, `agentPushNotifEnabled`: both `true`
 - `statusLine`: shells out to `statusline-command.sh` (needs jq)
@@ -64,7 +65,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 
 ## CLAUDE.md
 
-- **Sub-agents** — all work goes through sub-agents, cheapest model first (haiku for lookups/mechanical edits, sonnet for implementation, opus only for finished-diff review or security-critical code). Keeps the main thread's context small.
+- **Sub-agents** — bulk work goes through sub-agents, cheapest model first (haiku for lookups/mechanical edits, sonnet for implementation, opus only for finished-diff review or security-critical code); small bounded jobs (1–3 tool calls on a known file) run inline since spawn overhead outweighs the saving. Keeps the main thread's context small.
 - **RTK** — prefer Bash over Read/Grep/Glob so the RTK hook can rewrite calls for compact output; use `rtk lint`/`rtk tsc` for grouped errors.
 - **Git & PRs** — no PRs and no pushes unless explicitly asked; commit messages are subject-only, no body; never add `Co-Authored-By: Claude` or other Claude/Anthropic attribution.
 - **CodeGraph** — the block between the `CODEGRAPH_START`/`CODEGRAPH_END` markers is written by the `codegraph` installer; applies only in repos with `.codegraph/`.

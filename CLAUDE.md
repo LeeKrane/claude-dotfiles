@@ -1,6 +1,8 @@
-## Sub-agents: always delegate, cheapest model first
+## Sub-agents: delegate bulk work, cheapest model first
 
-All work via sub-agents (`Agent` tool), never inline — exploration, implementation, tests, review. Main thread orchestrates, keeps context small, relays findings only.
+Delegate via `Agent` when work is bulky: exploring unfamiliar code, reading many files, implementation, tests, review, or anything parallelizable. Main thread orchestrates, keeps context small, relays findings only.
+
+Inline (no sub-agent) when the job is small and bounded: 1–3 tool calls on a known file or symbol with small output — `git status`, one grep, reading one known section, a one-line edit. Spawn overhead outweighs the saving there.
 
 Cheapest model that can do job. Pass `model` explicitly on every `Agent` call:
 

@@ -225,7 +225,7 @@ When fixed-mode is used (no `--adaptive`), proceed directly to Step 3 peer revie
 This is the single highest-leverage V2 addition. The evidence is unambiguous: soft contrarian framing at the *start* (the Contrarian advisor) is statistically indistinguishable from baseline at inducing real disagreement — only a dedicated devil's advocate attacking the *emerging* answer works, and it measurably raises decision accuracy.
 
 1. From the advisor responses + peer review, identify the **emerging consensus answer** in one sentence (what is the council drifting toward recommending?). If there is genuinely no emerging answer yet, note that and skip to Step 4.
-2. Spawn **one** Devil's Advocate agent. Use a **strong model** (not `haiku`) — this agent must be sharp. Its prompt:
+2. Spawn **one** Devil's Advocate agent. Use `opus` — this agent must be sharp. Its prompt:
 
    ```
    The council is converging on this answer:

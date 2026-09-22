@@ -2,6 +2,19 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v17 — 2026-09-22
+
+Main model switched from Fable to Opus 5.5: settings.json `model` is
+now `opus[1m]`, and a new `modelSettings` block pins
+`claude-opus-5-5` `effortLevel` to `medium`. CLAUDE.md sub-agent rule
+relaxed from "always delegate" to "delegate bulk work": small bounded
+jobs (1–3 tool calls on a known file or symbol) now run inline; model
+tiers unchanged. council-review Devil's Advocate pinned to `opus`
+(was "strong model"). wayfinder research subagents pinned to `sonnet`
+(local edit to the mattpocock/skills copy; reinstalling via
+`npx skills` overwrites it). README settings and sub-agent summary
+updated to match.
+
 ## v16 — 2026-09-22
 
 dotfiles-release now pushes: step 8 renamed "Commit and push" and ends
