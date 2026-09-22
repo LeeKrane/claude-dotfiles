@@ -2,6 +2,20 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v15 — 2026-09-22
+
+settings.json: `permissions.defaultMode` set to `auto` (user scope, so it
+applies in every project) — the safety classifier approves routine
+actions instead of prompting per call; Claude Code falls back to default
+mode with a notice where auto mode is unavailable. Decided via /doctor,
+which found the rest of the setup healthy: settings parse, hooks fast
+(rtk PreToolUse median 25ms), CLAUDE.md lean at ~570 tokens, no
+derivable or migratable content, usage window too thin (first day) to
+judge unused skills/plugins. Also deleted two stale skill-creator plugin
+cache copies on this machine (active c447c3207a42 kept). README
+settings summary and SETUP verify step updated. No plugin, marketplace,
+MCP, hook, or skill changes; other machines get the new default on pull.
+
 ## v14 — 2026-09-22
 
 dotfiles-release gains a mandatory step 1 "Sync with the remote first":

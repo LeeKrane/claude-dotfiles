@@ -104,7 +104,7 @@ Then start `claude` in any directory and confirm:
 - statusline renders
 - `/cleanup-session-codebase`, `/cleanup-whole-codebase`, `/council-review`, `/context-audit`, `/repo-skills` appear in the slash-command list
 - `git -C ~/.claude status --short` is empty
-- `autoMode` is not tracked; run auto-mode setup on this machine if you want it
+- `autoMode` (auto-mode environment context) is not tracked; `permissions.defaultMode: auto` in `settings.json` is, so auto mode is on by default — run auto-mode setup on this machine if prompted
 
 ## 8. Record the installed dotfiles version
 

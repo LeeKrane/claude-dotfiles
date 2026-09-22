@@ -35,6 +35,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 - `env`: `BASH_MAX_OUTPUT_LENGTH=150000`, `WATERMARKS_HOOK_MODE=clean` (read by the watermarks-remover plugin)
 - `permissions.allow`: `mcp__codegraph__*`, `Bash(rtk read *)`, `Bash(rtk grep *)`
 - `permissions.deny`: Read/Grep on `node_modules/`, `.nuxt/`, `.output/`, `dist/`, `.data/`, `.cache/`
+- `permissions.defaultMode`: `auto` — safety classifier approves routine actions instead of prompting; falls back to default mode with a notice where auto mode is unavailable
 - `model`: `fable`
 - `autocompactPercentageOverride`: `75`
 - `inputNeededNotifEnabled`, `agentPushNotifEnabled`: both `true`

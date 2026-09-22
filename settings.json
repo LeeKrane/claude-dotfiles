@@ -22,7 +22,8 @@
       "Grep(dist/**)",
       "Grep(.data/**)",
       "Grep(.cache/**)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "model": "Fable",
   "hooks": {
