@@ -2,6 +2,10 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v18 — 2026-09-22
+
+Added teamclaude (KarpelesLab/teamclaude, npm `@karpeleslab/teamclaude`, pinned `1.1.21`) as a mandatory multi-account proxy that pools Team/Enterprise seats and rotates on quota. `settings.json` `env` gains `ANTHROPIC_BASE_URL=http://localhost:3456`; no `ANTHROPIC_API_KEY`/`ANTHROPIC_AUTH_TOKEN` is set, so Claude Code stays in subscription mode (loopback clients skip the proxy key). New SETUP step 3b: `npm install -g @karpeleslab/teamclaude@1.1.21`, `teamclaude login` per seat, set `"autoUpdate": false` in `~/.config/teamclaude.json` (blocks silent self-update to a possibly compromised npm release), `teamclaude service install` (systemd `--user` unit / macOS LaunchAgent; no linger). Seat tokens live only in `~/.config/teamclaude.json`, never tracked. Verify step adds `teamclaude status`. Bootstrap caveat documented in SETUP.md and README: an agent-driven setup or `/dotfiles-apply` of this release only works after temporarily removing the `ANTHROPIC_BASE_URL` line from `settings.json` until the proxy runs, then restoring it with `git checkout -- settings.json`. README: teamclaude row in external tools, base-URL line in the settings summary.
+
 ## v17 — 2026-09-22
 
 Main model switched from Fable to Opus 5.5: settings.json `model` is

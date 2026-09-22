@@ -1,6 +1,8 @@
 Instructions for an agent setting up Claude Code from this repo.
 Run steps in order; verify each. Do not edit tracked files unless the user asks.
 
+**Chicken-and-egg with teamclaude:** tracked `settings.json` sets `ANTHROPIC_BASE_URL=http://localhost:3456`. On a machine where the teamclaude proxy is not running yet, `claude` cannot connect — so an agent-driven setup (Claude following this file, or `/dotfiles-apply` after pulling the release that added teamclaude) only works if you temporarily remove the `ANTHROPIC_BASE_URL` line from `~/.claude/settings.json` first. Restore it (`git -C ~/.claude checkout -- settings.json`) once step 3b is done and `teamclaude status` shows the proxy up.
+
 ## 1. Prerequisites
 
 - `git`, `bash`, `curl`.
@@ -32,6 +34,40 @@ Then copy back from the backup anything the user wants to keep (`.credentials.js
 | Nerd Font | optional; statusline cache-glyph (flame U+F0238) renders as tofu without one | install any Nerd Font and set it as the terminal font | — |
 
 Ensure `~/.local/bin` is on PATH.
+
+## 3b. teamclaude (mandatory)
+
+[teamclaude](https://github.com/KarpelesLab/teamclaude) pools the Team/Enterprise seats and rotates on quota. `settings.json` sets `ANTHROPIC_BASE_URL=http://localhost:3456`, so `claude` cannot connect until this proxy runs — do this step before the first `claude` start. If Claude itself is running this setup, the base-URL line must be temporarily removed first (see the note at the top). teamclaude stores and refreshes the seat tokens itself in `~/.config/teamclaude.json` (untracked, never copy it into this repo).
+
+**NixOS hosts managed by `~/.dotfiles`:** skip the `npm install -g` and `teamclaude service install` below. The global npm prefix is read-only in the Nix store there, so both fail. `~/.dotfiles` ships teamclaude instead: `pkgs/teamclaude/package.nix` pins the version, and its wrapper sets `TEAMCLAUDE_DISABLE_AUTOUPDATE=1`. `modules/home/teamclaude.nix` adds a `systemd.user.services.teamclaude` unit. Run `just switch <host>` in `~/.dotfiles`, then continue with `teamclaude login` and the `autoUpdate` step below. To bump the version, edit `version` and `hash` in `pkgs/teamclaude/package.nix` together with the pin here, then switch again.
+
+Needs Node.js 20+. Install the pinned version (prefix `sudo` if `npm config get prefix` is a system path like `/usr/local`):
+
+```
+npm install -g @karpeleslab/teamclaude@1.1.21
+```
+
+Add every seat (browser OAuth, run once per seat):
+
+```
+teamclaude login
+```
+
+Disable self-update so a compromised npm release is never installed automatically — do this before starting the service:
+
+```
+f=~/.config/teamclaude.json; t=$(mktemp) && jq '.autoUpdate = false' "$f" > "$t" && mv "$t" "$f"
+```
+
+Run it as a per-user service (systemd `--user` unit on Linux, LaunchAgent on macOS):
+
+```
+teamclaude service install
+```
+
+Verify: `teamclaude accounts` lists every seat, `teamclaude status` shows the proxy up, `jq .autoUpdate ~/.config/teamclaude.json` prints `false`.
+
+Updating later is manual: bump the pinned version here, then `npm install -g @karpeleslab/teamclaude@<version>` and `systemctl --user restart teamclaude`.
 
 ## 4. Log in
 
@@ -95,6 +131,7 @@ skill-scout's Find stage also calls `npx skills find <term>` (same CLI, already 
 
 ```
 jq --version && rtk --version && codegraph --version
+teamclaude status
 claude mcp list
 claude plugin list
 ```

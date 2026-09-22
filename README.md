@@ -1,6 +1,6 @@
 # Claude Code config
 
-Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.claude`. New machine: see `SETUP.md`.
+Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.claude`. New machine: see `SETUP.md`. Setting up via Claude itself (following `SETUP.md` or running `/dotfiles-apply`) only works after temporarily removing `ANTHROPIC_BASE_URL` from `settings.json` until the teamclaude proxy runs — see the note at the top of `SETUP.md`.
 
 ## Layout
 
@@ -32,7 +32,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 
 ## settings.json
 
-- `env`: `BASH_MAX_OUTPUT_LENGTH=150000`, `WATERMARKS_HOOK_MODE=clean` (read by the watermarks-remover plugin)
+- `env`: `BASH_MAX_OUTPUT_LENGTH=150000`, `WATERMARKS_HOOK_MODE=clean` (read by the watermarks-remover plugin), `ANTHROPIC_BASE_URL=http://localhost:3456` (routes all Claude Code traffic through the teamclaude proxy; no API key/auth token set, so subscription mode stays on)
 - `permissions.allow`: `mcp__codegraph__*`, `Bash(rtk read *)`, `Bash(rtk grep *)`
 - `permissions.deny`: Read/Grep on `node_modules/`, `.nuxt/`, `.output/`, `dist/`, `.data/`, `.cache/`
 - `permissions.defaultMode`: `auto` — safety classifier approves routine actions instead of prompting; falls back to default mode with a notice where auto mode is unavailable
@@ -114,7 +114,8 @@ Each machine keeps its own installed version in `.dotfiles-version`, a local, gi
 |---|---|
 | codegraph | UserPromptSubmit hook, MCP server, CLAUDE.md |
 | rtk | PreToolUse hook, permissions |
-| jq | statusline |
+| jq | statusline, SETUP teamclaude step |
+| teamclaude | mandatory: pools Team/Enterprise seats, rotates on quota; per-user service on port 3456, pinned `1.1.21` with `autoUpdate: false` (SETUP step 3b; NixOS hosts get it from `~/.dotfiles` instead of npm) |
 | bat | optional; only backs the `cat` alias |
 
 ## Not tracked
