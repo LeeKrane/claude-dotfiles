@@ -2,6 +2,10 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v20 — 2026-09-25
+
+Auto-compact threshold fix in `settings.json`: removed the undocumented top-level key `autocompactPercentageOverride` (Claude Code ignored it) and set the documented env var `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=75` in the `env` block instead. Per docs, the env var can only lower the threshold below the default. README settings section updated to match.
+
 ## v19 — 2026-09-25
 
 - `skill-scout` skill: each vetted candidate now gets a Capabilities list and an intent check (AskUserQuestion: which aspects the user would use, and where — all projects or specific repos); answers rescore fit/benefit, zero aspects → skip with nothing drafted, specific repos → lean project-scope. New integration-research step after approval (sonnet subagent per candidate: placement, dependencies, env var names only, config fragments incl. `skillOverrides`, trigger interplay, stack fit with RTK/caveman/teamclaude, CLAUDE.md line, smoke test); approved config applied via `update-config` for global installs, stored in a new REPO-SKILLS `Setup` field for project-scope. New Integrate mode for already-vetted skills. Step-3 inventory now also records hook events and env var names (never values). Ranked block gains a 9th `Intent:` line.

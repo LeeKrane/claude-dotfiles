@@ -2,7 +2,8 @@
   "env": {
     "BASH_MAX_OUTPUT_LENGTH": "150000",
     "WATERMARKS_HOOK_MODE": "clean",
-    "ANTHROPIC_BASE_URL": "http://localhost:3456"
+    "ANTHROPIC_BASE_URL": "http://localhost:3456",
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "75"
   },
   "permissions": {
     "allow": [
@@ -101,6 +102,5 @@
     }
   },
   "inputNeededNotifEnabled": true,
-  "agentPushNotifEnabled": true,
-  "autocompactPercentageOverride": 75
+  "agentPushNotifEnabled": true
 }

@@ -32,13 +32,12 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 
 ## settings.json
 
-- `env`: `BASH_MAX_OUTPUT_LENGTH=150000`, `WATERMARKS_HOOK_MODE=clean` (read by the watermarks-remover plugin), `ANTHROPIC_BASE_URL=http://localhost:3456` (routes all Claude Code traffic through the teamclaude proxy; no API key/auth token set, so subscription mode stays on)
+- `env`: `BASH_MAX_OUTPUT_LENGTH=150000`, `WATERMARKS_HOOK_MODE=clean` (read by the watermarks-remover plugin), `ANTHROPIC_BASE_URL=http://localhost:3456` (routes all Claude Code traffic through the teamclaude proxy; no API key/auth token set, so subscription mode stays on), `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=75` (auto-compact threshold; can only lower the default, values above it are ignored)
 - `permissions.allow`: `mcp__codegraph__*`, `Bash(rtk read *)`, `Bash(rtk grep *)`
 - `permissions.deny`: Read/Grep on `node_modules/`, `.nuxt/`, `.output/`, `dist/`, `.data/`, `.cache/`
 - `permissions.defaultMode`: `auto` — safety classifier approves routine actions instead of prompting; falls back to default mode with a notice where auto mode is unavailable
 - `model`: `opus[1m]` (Opus 5.5, 1M context)
 - `modelSettings`: pins Opus 5.5 effort to `medium` (its default; set via `/model`)
-- `autocompactPercentageOverride`: `75`
 - `inputNeededNotifEnabled`, `agentPushNotifEnabled`: both `true`
 - `statusLine`: shells out to `statusline-command.sh` (needs jq)
 
