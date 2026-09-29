@@ -37,6 +37,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 - `permissions.deny`: Read/Grep on `node_modules/`, `.nuxt/`, `.output/`, `dist/`, `.data/`, `.cache/`
 - `permissions.defaultMode`: `auto` — safety classifier approves routine actions instead of prompting; falls back to default mode with a notice where auto mode is unavailable
 - `model`: `opus[1m]` (Opus 5.5, 1M context)
+- `outputStyle`: `Concise` (built-in style: leads with results, skips preamble and narration)
 - `modelSettings`: pins Opus 5.5 effort to `medium` (its default; set via `/model`)
 - `inputNeededNotifEnabled`, `agentPushNotifEnabled`: both `true`
 - `statusLine`: shells out to `statusline-command.sh` (needs jq)
