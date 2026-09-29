@@ -2,6 +2,10 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v21 — 2026-09-29
+
+Set `outputStyle` to `Concise` in `settings.json`, making Claude Code's built-in Concise output style (leads with results, skips preamble and narration) the default for every session. No custom output-style file needed; requires a Claude Code version that ships the built-in `Concise` style (present in 2.1.280). README settings section updated to match.
+
 ## v20 — 2026-09-25
 
 Auto-compact threshold fix in `settings.json`: removed the undocumented top-level key `autocompactPercentageOverride` (Claude Code ignored it) and set the documented env var `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=75` in the `env` block instead. Per docs, the env var can only lower the threshold below the default. README settings section updated to match.
