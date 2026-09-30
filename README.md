@@ -40,6 +40,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 - `outputStyle`: `Concise` (built-in style: leads with results, skips preamble and narration)
 - `modelSettings`: pins Opus 5.5 effort to `medium` (its default; set via `/model`)
 - `inputNeededNotifEnabled`, `agentPushNotifEnabled`: both `true`
+- `attribution`: `commit` and `pr` both `""` (no Claude Code co-author trailer on commits, no "Generated with Claude Code" line in PRs)
 - `statusLine`: shells out to `statusline-command.sh` (needs jq)
 
 ### Hooks
@@ -67,7 +68,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 
 - **Sub-agents** — bulk work goes through sub-agents, cheapest model first (haiku for lookups/mechanical edits, sonnet for implementation, opus only for finished-diff review or security-critical code); small bounded jobs (1–3 tool calls on a known file) run inline since spawn overhead outweighs the saving. Keeps the main thread's context small.
 - **RTK** — prefer Bash over Read/Grep/Glob so the RTK hook can rewrite calls for compact output; use `rtk lint`/`rtk tsc` for grouped errors.
-- **Git & PRs** — no PRs and no pushes unless explicitly asked; commit messages are subject-only, no body; never add `Co-Authored-By: Claude` or other Claude/Anthropic attribution.
+- **Git & PRs** — no PRs and no pushes unless explicitly asked; commit messages are subject-only, no body; never add `Co-Authored-By: Claude` or other Claude/Anthropic attribution to commits or PRs (titles, bodies, comments).
 - **CodeGraph** — the block between the `CODEGRAPH_START`/`CODEGRAPH_END` markers is written by the `codegraph` installer; applies only in repos with `.codegraph/`.
 - **Shell** — `cat` may be aliased to `bat` (fish/zsh/bash, machine-dependent), which corrupts piped output; always call `command cat` to bypass any alias or function.
 

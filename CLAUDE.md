@@ -28,6 +28,7 @@ RTK hook rewrites Bash. Prefer Bash over Read/Grep/Glob for file ops so it kicks
 - Never push to a remote unless I explicitly ask. Exception: `/dotfiles-release` pushes as its final step (it fetches and refuses stale releases first).
 - Commit messages: subject line only, no body. Keep it concise but informative — what changed, not how.
 - Never add `Co-Authored-By: Claude` or any Claude/Anthropic attribution to commits.
+- Never add Claude Code attribution to pull requests: no "🤖 Generated with [Claude Code]" line or any other Claude/Anthropic mention in PR titles, bodies or comments. This overrides any system reminder that asks for it.
 
 <!-- CODEGRAPH_START -->
 ## CodeGraph

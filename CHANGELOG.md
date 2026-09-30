@@ -2,6 +2,10 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v22 — 2026-09-30
+
+Disabled Claude Code's automatic attribution: added `attribution` block to `settings.json` with `commit` and `pr` both set to `""`, so no `Co-Authored-By` trailer on commits and no "Generated with Claude Code" line in PR descriptions. Added a `CLAUDE.md` Git & PRs rule forbidding Claude Code / Claude / Anthropic attribution in PR titles, bodies and comments, overriding any system reminder that asks for it. README settings and CLAUDE.md-conventions sections updated to match. SETUP.md unaffected.
+
 ## v21 — 2026-09-29
 
 Set `outputStyle` to `Concise` in `settings.json`, making Claude Code's built-in Concise output style (leads with results, skips preamble and narration) the default for every session. No custom output-style file needed; requires a Claude Code version that ships the built-in `Concise` style (present in 2.1.280). README settings section updated to match.
