@@ -2,6 +2,10 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v23 — 2026-10-05
+
+`REPO-SKILLS.md`: added project-scope entry `replica-skill` (Jakeschincariol/replica-skill @77c9436), the 11 `replica-*` skills for reverse-engineering and rebuilding an existing app (recon, architect, design, build, backend, test, diff, entrepreneur, brand, launch, deploy), signalled for the future `KraneticFitness` repo. Vetted by skill-scout with council `--quick`, SkillSpector `--no-llm` (10 findings, all false positives) and a full manual read; upstream behaviour kept unpatched by user decision (per-screen commits, unasked Playwright install, review sources, deploy confirms noted). Setup carries a `skillOverrides` fragment making `replica-recon`, `replica-test`, `replica-launch` and `replica-deploy` user-invocable-only, plus manual dependency, NixOS Playwright and smoke-test notes. Nothing installed globally; nothing to do on other machines. README and SETUP.md repo-scoped lists updated to match.
+
 ## v22 — 2026-09-30
 
 Disabled Claude Code's automatic attribution: added `attribution` block to `settings.json` with `commit` and `pr` both set to `""`, so no `Co-Authored-By` trailer on commits and no "Generated with Claude Code" line in PR descriptions. Added a `CLAUDE.md` Git & PRs rule forbidding Claude Code / Claude / Anthropic attribution in PR titles, bodies and comments, overriding any system reminder that asks for it. README settings and CLAUDE.md-conventions sections updated to match. SETUP.md unaffected.
