@@ -19,7 +19,7 @@ the user approves. `skill-scout` appends entries here whenever a candidate's
 verdict is **project-scope** (its step 10) — vetted, wanted, never global.
 
 Fields per entry, one per line: Type (skill | plugin | mcp), Path (subdir of
-the source holding the installable skill; `.` = repo root), Depends, What,
+the source holding the installable skill; `.` = repo root), Depends, Requires (optional; other registry entries `/repo-skills` installs alongside, before this one), What,
 Signals, Global state, Source, Pin, Vetted, Enable (for `plugin` type: a literal `enabledPlugins` or `skillOverrides` JSON fragment; otherwise prose naming the exact install action), Cost, Refresh, Setup (optional; integration items from skill-scout's step 10 as sub-bullets tagged `config:` — a literal JSON fragment `/repo-skills` merges into `<project>/.claude/settings.local.json` — or `manual:` — dependencies, env var names, CLAUDE.md line, smoke test, shown as follow-ups, never run).
 
 ## video-shotcraft
@@ -185,3 +185,22 @@ Signals, Global state, Source, Pin, Vetted, Enable (for `plugin` type: a literal
   - manual: rebuild the dotfiles (`/dotfiles-apply`) so `anydoc` is on PATH; check with `! anydoc --version` (expect 0.2.4)
   - manual: optional `FIRECRAWL_API_KEY` in the shell profile, only for higher hosted-OCR limits
   - manual: smoke test — in that repo, "what's in <file>.docx?" loads the skill and runs `anydoc`; a text PDF still goes through Read
+
+## pdf-to-obsidian-notes
+
+- Type: skill (self-authored, vendored)
+- Path: `.`
+- Depends: `anydoc` CLI on PATH (dotfiles `pkgs/anydoc`); not installed by `/repo-skills`
+- Requires: `convert-documents-to-markdown`, `obsidian-notes-creator`
+- What: one-argument pipeline (PDF path or name): converts the PDF with `anydoc`, cleans the conversion Markdown in a sonnet subagent (keeps all content, never reads the PDF), then makes Obsidian study notes from it with obsidian-notes-creator, optionally merged with the user's handwritten lecture notes (second argument, a `.md` file, read as-is). Moves the PDF, the cleaned `<stem>.md` and the lecture notes into `_original_/` beside the PDF, and writes all notes flat where the PDF was (hub or single note `<stem>.md`)
+- Signals: PDFs of lecture slides or course material in the repo; user asks for study notes from a PDF, "/pdf-to-obsidian-notes"
+- Global state: not installed globally; source vendored at `~/.claude/vendor/pdf-to-obsidian-notes/SKILL.md`
+- Source: `~/.claude/vendor/pdf-to-obsidian-notes/`
+- Pin: none (self-authored; versioned by the dotfiles repo)
+- Vetted: 2026-10-08, self-authored, no external code. Runs only `anydoc`, `find`, `cp`, `wc`, `grep`; `--ocr hosted` (uploads the PDF to Firecrawl) only after asking, inherited from convert-documents-to-markdown rule 5. Written after a cleanup subagent was told to cross-check the raw PDF, which defeats anydoc's token saving; the skill forbids any PDF read after conversion
+- Enable: install the Requires entries first, then copy `~/.claude/vendor/pdf-to-obsidian-notes/` to `<project>/.claude/skills/pdf-to-obsidian-notes/`
+- Cost: about 45 tok always-on when enabled; about 1.8k tok SKILL.md on invocation, plus the two required skills, the cleanup subagent (about 100-150k subagent tokens for a 40-slide deck) and note writing
+- Refresh: edit the vendored copy; re-check when either required skill's Pin changes (obsidian-notes-creator renames, anydoc exit codes)
+- Setup:
+  - manual: check `! anydoc --version` (expect 0.2.4); rebuild the dotfiles (`/dotfiles-apply`) if missing
+  - manual: smoke test: in that repo, `/pdf-to-obsidian-notes <file>.pdf` leaves `_original_/<file>.pdf` and `_original_/<file>.md`, writes notes (`<file>.md` hub plus any others, no subfolders) where the PDF was, and makes no Read call on the PDF

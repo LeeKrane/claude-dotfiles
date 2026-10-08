@@ -125,7 +125,7 @@ skill-scout's Find stage also calls `npx skills find <term>` (same CLI, already 
 
 ## 6c. Repo-scoped skills
 
-`REPO-SKILLS.md` lists skills that are vetted but never installed globally (currently `video-shotcraft`, `brag`, `obsidian-notes-creator`, and for `krane-solutions-business-orchestration` `hormozi-offer`, `pricing-strategy`, `business-model`, `objection-destroyer`, `marketing-council` (manual-only), for `KraneticFitness` the 11-skill `replica-skill` pack, and `convert-documents-to-markdown` (anydoc, vendored with local edits in `vendor/`, needs the `anydoc` CLI from the NixOS dotfiles)). Nothing to do on a fresh machine. In a project that wants one, run `/repo-skills` — it installs a pinned copy into that project's `.claude/skills/` only.
+`REPO-SKILLS.md` lists skills that are vetted but never installed globally (currently `video-shotcraft`, `brag`, `obsidian-notes-creator`, and for `krane-solutions-business-orchestration` `hormozi-offer`, `pricing-strategy`, `business-model`, `objection-destroyer`, `marketing-council` (manual-only), for `KraneticFitness` the 11-skill `replica-skill` pack, `convert-documents-to-markdown` (anydoc, vendored with local edits in `vendor/`, needs the `anydoc` CLI from the NixOS dotfiles), and `pdf-to-obsidian-notes` (self-authored in `vendor/`, `Requires` the anydoc and obsidian-notes-creator entries)). Nothing to do on a fresh machine. In a project that wants one, run `/repo-skills` — it installs a pinned copy into that project's `.claude/skills/` only.
 
 ## 7. Verify
 
