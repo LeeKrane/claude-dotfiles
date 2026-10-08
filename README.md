@@ -28,6 +28,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 | `skills/blast-radius/` | `blast-radius` skill (cursor/plugins pstack, via `npx skills`) |
 | `skills/unslop/` | `unslop` skill (cursor/plugins pstack, via `npx skills`; CLAUDE.md-gated) |
 | `REPO-SKILLS.md` | Registry of repo-scoped skills (vetted, never global), installed per project via `/repo-skills` |
+| `vendor/` | Locally edited copies of repo-scoped skills that `REPO-SKILLS.md` entries install from (provenance comment in each SKILL.md) |
 | `CHANGELOG.md` | Integer-versioned changelog for this repo |
 
 ## settings.json

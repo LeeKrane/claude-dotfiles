@@ -2,6 +2,10 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v24 — 2026-10-08
+
+`REPO-SKILLS.md`: added project-scope entry `convert-documents-to-markdown` (firecrawl/anydoc @261fc25), a skill that converts docx/pptx/xlsx/odt/ods/odp/rtf/epub and legacy doc/ppt/xls to Markdown, plus scanned PDFs via Firecrawl's hosted OCR. Vetted by skill-scout (council skipped at user request), SkillSpector `--no-llm` 12/LOW (one real finding, unpinned `npx`, fixed by local edit) and a full manual read. Vendored with local edits in the new tracked directory `vendor/convert-documents-to-markdown/` (`.gitignore` now allowlists `vendor/`): calls the Nix-pinned `anydoc` CLI instead of `npx`, drops text PDF and CSV from the description, asks before `--ocr hosted` uploads a document. Depends on the `anydoc` package from the NixOS dotfiles (`pkgs/anydoc`). No repos signalled yet; nothing installed globally; nothing to do on other machines beyond the `git pull`. README and SETUP.md repo-scoped lists updated, README file table gains `vendor/`.
+
 ## v23 — 2026-10-05
 
 `REPO-SKILLS.md`: added project-scope entry `replica-skill` (Jakeschincariol/replica-skill @77c9436), the 11 `replica-*` skills for reverse-engineering and rebuilding an existing app (recon, architect, design, build, backend, test, diff, entrepreneur, brand, launch, deploy), signalled for the future `KraneticFitness` repo. Vetted by skill-scout with council `--quick`, SkillSpector `--no-llm` (10 findings, all false positives) and a full manual read; upstream behaviour kept unpatched by user decision (per-screen commits, unasked Playwright install, review sources, deploy confirms noted). Setup carries a `skillOverrides` fragment making `replica-recon`, `replica-test`, `replica-launch` and `replica-deploy` user-invocable-only, plus manual dependency, NixOS Playwright and smoke-test notes. Nothing installed globally; nothing to do on other machines. README and SETUP.md repo-scoped lists updated to match.
