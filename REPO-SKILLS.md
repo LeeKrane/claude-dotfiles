@@ -166,3 +166,22 @@ Signals, Global state, Source, Pin, Vetted, Enable (for `plugin` type: a literal
   - manual: NixOS — Playwright's own chromium download often fails; use nixpkgs `playwright-driver.browsers` with `PLAYWRIGHT_BROWSERS_PATH` instead of `npx playwright install chromium`; put python3/node in the project's devShell
   - manual: RTK compresses Bash output — check one real run of `parity.py`/`imgdiff.py`/`sweep.py` before trusting parsed numbers; caveman style must not leak into replica-brand voice or replica-launch landing/listing copy, so clean that copy before shipping
   - manual: smoke test — in that repo, `/replica-recon` loads and asks its three scoping questions (app + platform, which slice, who it is for); "find bugs" still routes to superpowers
+
+## convert-documents-to-markdown
+
+- Type: skill (vendored with local edits)
+- Path: `skills/convert-documents-to-markdown`
+- Depends: `anydoc` CLI on PATH, from the dotfiles package `pkgs/anydoc` (pinned 0.2.4, home-manager `dev.nix`); not installed by `/repo-skills`
+- What: converts docx/pptx/xlsx/odt/ods/odp/rtf/epub and legacy doc/ppt/xls to Markdown with the local `anydoc` CLI; optional hosted OCR for scanned PDFs via Firecrawl Parse, ask-first
+- Signals: office documents (`.docx`, `.pptx`, `.xlsx`, `.odt`, `.epub`, ...) or scanned PDFs in the repo; Obsidian study vault with lecture material; user asks to read or convert an office document
+- Global state: not installed globally; adapted copy vendored at `~/.claude/vendor/convert-documents-to-markdown/SKILL.md`
+- Source: https://github.com/firecrawl/anydoc
+- Pin: `261fc257d17c3eab0f673be31c408fd9fdc2171a`
+- Vetted: 2026-10-08, skill-scout (council skipped at user request), project-scope. SkillSpector `--no-llm`: 12/LOW, SAFE; only finding RP1 (MEDIUM) unpinned `npx -y @firecrawl/anydoc` at SKILL.md:14-16 = real, resolved by the local edit to the Nix-pinned `anydoc`. Manual read of the single 26-line SKILL.md: no exec beyond the CLI, no credential handling; rule 5 `--ocr hosted` uploads the whole document to Firecrawl, edited to ask the user first. Usage: 0 of 267 prompts mention office formats; user wants it anyway, repos chosen later
+- Enable: copy `~/.claude/vendor/convert-documents-to-markdown/` to `<project>/.claude/skills/convert-documents-to-markdown/`. Upstream at Pin is the provenance reference only; its unedited SKILL.md calls unpinned npx and auto-suggests hosted OCR, so never install it directly
+- Cost: ≈75 tok always-on when enabled (only in that repo); ≈550 tok on invocation, single SKILL.md, plus the converted Markdown
+- Refresh: re-run skill-scout on firecrawl/anydoc, diff upstream SKILL.md against Pin, reapply the edits listed in the vendored copy's provenance comment, bump Pin; bump `pkgs/anydoc` alongside; usage review 2026-11-08 — remove the entry if claude-mem shows zero invocations
+- Setup:
+  - manual: rebuild the dotfiles (`/dotfiles-apply`) so `anydoc` is on PATH; check with `! anydoc --version` (expect 0.2.4)
+  - manual: optional `FIRECRAWL_API_KEY` in the shell profile, only for higher hosted-OCR limits
+  - manual: smoke test — in that repo, "what's in <file>.docx?" loads the skill and runs `anydoc`; a text PDF still goes through Read

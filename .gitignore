@@ -17,6 +17,10 @@
 !skills/
 !skills/**
 
+# Adapted copies of repo-scoped skills (REPO-SKILLS.md Enable).
+!vendor/
+!vendor/**
+
 # Never track, even if a broad "!" rule is added above.
 .credentials.json
 daemon/control.key
