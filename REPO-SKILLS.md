@@ -8,10 +8,15 @@ installed or enabled only in the projects that want it, one of two ways:
 - **Skill install**: a pinned copy of the source's skill files lands at
   `<project>/.claude/skills/<name>/`, excluded via the project's own
   git exclude file (`git rev-parse --git-path info/exclude`) (never its tracked `.gitignore`, unless asked).
-- **Plugin enable** (no entry uses it yet): plugin installed globally but
-  disabled in `settings.json`; a project re-enables it via `enabledPlugins`
-  (or `skillOverrides`) in `<project>/.claude/settings.local.json`, which
-  this repo never tracks.
+- **Plugin enable**: plugin (or a plugin's skill, or a skill in
+  `~/.claude/skills/`) installed globally but disabled in `settings.json`
+  (`enabledPlugins: false` or `skillOverrides: "off"`); a project re-enables
+  it via `enabledPlugins` (or `skillOverrides: "on"`) in
+  `<project>/.claude/settings.local.json`, which this repo never tracks.
+  Local settings win over user settings, so the project's `"on"` beats the
+  global `"off"`. Entries of this kind use Type `plugin` even when the skill
+  lives in `~/.claude/skills/`, because enabling is a settings merge, not a
+  file copy.
 
 `/repo-skills` (`skills/repo-skills/SKILL.md`) reads this file, matches each
 entry's Signals against the current project, and applies Enable for whatever
@@ -204,3 +209,153 @@ Signals, Global state, Source, Pin, Vetted, Enable (for `plugin` type: a literal
 - Setup:
   - manual: check `! anydoc --version` (expect 0.2.4); rebuild the dotfiles (`/dotfiles-apply`) if missing
   - manual: smoke test: in that repo, `/pdf-to-obsidian-notes <file>.pdf` leaves `_original_/<file>.pdf` and `_original_/<file>.md`, writes notes (`<file>.md` hub plus any others, no subfolders) where the PDF was, and makes no Read call on the PDF
+
+## engineering-skills
+
+- Type: plugin (own skills in `~/.claude/skills/`, disabled by `skillOverrides`)
+- Path: `skills/wayfinder`, `skills/setup-matt-pocock-skills`, `skills/domain-modeling`, `skills/grilling`, `skills/prototype`
+- Depends: an issue tracker for wayfinder (GitHub, GitLab or local, chosen by setup-matt-pocock-skills)
+- What: multi-session planning with decision tickets (wayfinder), its one-time repo setup, domain glossary and ADR upkeep, plan grilling, throwaway prototypes
+- Signals: work too big for one session or with open "X or Y?" decisions; `CONTEXT.md` or `docs/adr/` in the repo; issue tracker in use; user asks to grill a plan or prototype a design
+- Global state: installed in `~/.claude/skills/`, `"off"` in `settings.json` `skillOverrides` since 2026-11-20 (doctor: 0 uses)
+- Source: this dotfiles repo
+- Pin: none (versioned by the dotfiles repo)
+- Vetted: self-maintained copies already in use
+- Enable: `{"skillOverrides": {"wayfinder": "on", "setup-matt-pocock-skills": "on", "domain-modeling": "on", "grilling": "on", "prototype": "on"}}`
+- Cost: about 150 tok always-on when enabled (wayfinder and setup-matt-pocock-skills are slash-only, 0 tok)
+- Refresh: edit the skills in this repo
+
+## codebase-cleanup
+
+- Type: plugin (own skills in `~/.claude/skills/`, disabled by `skillOverrides`)
+- Path: `skills/cleanup-session-codebase`, `skills/cleanup-whole-codebase`, `skills/blast-radius`
+- Depends: none
+- What: slash-only dead-code and debug-logging cleanup for a session diff or a whole repo; blast-radius check of what a change could break beyond the diff
+- Signals: code repo with active feature branches; user asks for cleanup or a pre-ship impact check
+- Global state: installed in `~/.claude/skills/`, `"off"` in `settings.json` `skillOverrides` since 2026-11-20 (doctor: 0 uses)
+- Source: this dotfiles repo
+- Pin: none (versioned by the dotfiles repo)
+- Vetted: self-maintained
+- Enable: `{"skillOverrides": {"cleanup-session-codebase": "on", "cleanup-whole-codebase": "on", "blast-radius": "on"}}`
+- Cost: 0 tok always-on (all slash-only)
+- Refresh: edit the skills in this repo
+
+## superpowers-extras
+
+- Type: plugin (skills of `superpowers@superpowers-dev`, plugin itself stays enabled globally)
+- Path: n/a
+- Depends: superpowers plugin enabled
+- What: inline plan execution (executing-plans), parallel agent fan-out (dispatching-parallel-agents), skill authoring with tests (writing-skills), post-mortem of a failed superpowers session (diagnosing-superpowers)
+- Signals: implementation plans under `docs/superpowers/plans/`; repo with `skills/*/SKILL.md` or `.claude-plugin/plugin.json` (skill or plugin authoring); user wants a plan run inline instead of with subagents
+- Global state: plugin enabled; these 4 skills `"off"` in `settings.json` `skillOverrides` since 2026-11-20 (doctor: 0 uses)
+- Source: superpowers-dev marketplace
+- Pin: plugin version 6.4.1 at time of entry
+- Vetted: plugin already installed and in use
+- Enable: `{"skillOverrides": {"superpowers:executing-plans": "on", "superpowers:dispatching-parallel-agents": "on", "superpowers:writing-skills": "on", "superpowers:diagnosing-superpowers": "on"}}`
+- Cost: about 200 tok always-on when enabled
+- Refresh: after a superpowers update, check the 4 skill names still exist
+
+## frontend-design
+
+- Type: plugin (skills of `impeccable@impeccable` and `claude-mem@thedotmack`, plugins stay enabled globally)
+- Path: n/a
+- Depends: impeccable and claude-mem plugins enabled
+- What: UI design, critique, polish and design-system work (impeccable); Dieter Rams design audit that hands off a plan (claude-mem design-is)
+- Signals: frontend deps in `package.json` (`react`, `vue`, `svelte`, `next`, `astro`, `tailwindcss`); `*.css`/`*.html`/component dirs; user asks to design, redesign or critique a UI
+- Global state: plugins enabled (impeccable's hooks keep running); both skills `"off"` in `settings.json` `skillOverrides` since 2026-11-20 (doctor: 0 uses)
+- Source: impeccable and thedotmack marketplaces
+- Pin: impeccable 4.3.1, claude-mem 13.25.3 at time of entry
+- Vetted: plugins already installed and in use
+- Enable: `{"skillOverrides": {"impeccable:impeccable": "on", "claude-mem:design-is": "on"}}`
+- Cost: about 300 tok always-on when enabled
+- Refresh: after a plugin update, check the skill names still exist
+
+## claude-mem-planning
+
+- Type: plugin (skills of `claude-mem@thedotmack`, plugin stays enabled globally)
+- Path: n/a
+- Depends: claude-mem plugin enabled, worker running
+- What: phased plan then subagent execution (make-plan, do), architecture unification map (pathfinder), full codebase priming (learn-codebase), AST-based structural search (smart-explore)
+- Signals: large or unfamiliar codebase; refactor across duplicated subsystems; user asks to prime or map the codebase
+- Global state: plugin enabled; these skills `"off"` in `settings.json` `skillOverrides` since 2026-11-20 (doctor: 0 uses)
+- Source: thedotmack marketplace
+- Pin: claude-mem 13.25.3 at time of entry
+- Vetted: plugin already installed and in use
+- Enable: `{"skillOverrides": {"claude-mem:make-plan": "on", "claude-mem:do": "on", "claude-mem:pathfinder": "on", "claude-mem:learn-codebase": "on", "claude-mem:smart-explore": "on"}}`
+- Cost: about 370 tok always-on when enabled
+- Refresh: after a claude-mem update, check the skill names still exist
+
+## claude-mem-github
+
+- Type: plugin (skills of `claude-mem@thedotmack`, plugin stays enabled globally)
+- Path: n/a
+- Depends: claude-mem plugin enabled; `gh` authenticated
+- What: watch a PR until review and CI are clean (babysit); cluster an issue backlog by root cause into plan issues (oh-my-issues); version bump, tag and release for Claude Code plugins (version-bump)
+- Signals: GitHub remote with open PRs or a large issue backlog; `.claude-plugin/plugin.json` or `marketplace.json` in the repo (version-bump)
+- Global state: plugin enabled; these skills `"off"` in `settings.json` `skillOverrides` since 2026-11-20 (doctor: 0 uses)
+- Source: thedotmack marketplace
+- Pin: claude-mem 13.25.3 at time of entry
+- Vetted: plugin already installed and in use
+- Enable: `{"skillOverrides": {"claude-mem:babysit": "on", "claude-mem:oh-my-issues": "on", "claude-mem:version-bump": "on"}}`
+- Cost: about 220 tok always-on when enabled
+- Refresh: after a claude-mem update, check the skill names still exist
+
+## caveman-workflows
+
+- Type: plugin (skills of `caveman@caveman`, plugin and caveman mode stay enabled globally)
+- Path: n/a
+- Depends: caveman plugin enabled
+- What: disciplined task modes: diagnose first (investigate-first), scoped feature build (lean-build), reversible migrations (migration), behavior-preserving refactors (safe-refactor), narrow bug fixes (surgical-patch), acceptance-only verification (verify-and-stop)
+- Signals: schema/data/API migrations (`migrations/`, `prisma/`, `alembic/`); large refactor or intermittent bug in a code repo
+- Global state: plugin enabled; these skills `"off"` in `settings.json` `skillOverrides` since 2026-11-20 (doctor: 0 uses)
+- Source: caveman marketplace
+- Pin: caveman 2.7.0 at time of entry
+- Vetted: plugin already installed and in use
+- Enable: `{"skillOverrides": {"caveman:investigate-first": "on", "caveman:lean-build": "on", "caveman:migration": "on", "caveman:safe-refactor": "on", "caveman:surgical-patch": "on", "caveman:verify-and-stop": "on"}}`
+- Cost: about 300 tok always-on when enabled
+- Refresh: after a caveman update, check the skill names still exist
+
+## caveman-cloud
+
+- Type: plugin (skills of `caveman@caveman`)
+- Path: n/a
+- Depends: caveman plugin enabled; a Caveman Cloud account
+- What: route a repo's LLM calls through the Caveman Cloud gateway, label workflows, review spend evidence, run and manage optimization experiments
+- Signals: LLM SDK in deps (`anthropic`, `@anthropic-ai/sdk`, `openai`, `langchain`, `ai`); user asks about LLM spend in that app
+- Global state: plugin enabled; these skills `"off"` in `settings.json` `skillOverrides` since 2026-11-20 (doctor: 0 uses)
+- Source: caveman marketplace
+- Pin: caveman 2.7.0 at time of entry
+- Vetted: plugin already installed and in use; `caveman-setup` rewires the app's LLM base URL, so review its diff before merging
+- Enable: `{"skillOverrides": {"caveman:caveman-setup": "on", "caveman:caveman-discover": "on", "caveman:caveman-evidence-review": "on", "caveman:caveman-manage": "on", "caveman:caveman-optimize": "on", "caveman:caveman-learn": "on"}}`
+- Cost: about 330 tok always-on when enabled
+- Refresh: after a caveman update, check the skill names still exist
+
+## writing-cleanup
+
+- Type: plugin (skills of `watermarks-remover@watermarks-remover`, plugin and its PostToolUse hook stay enabled globally)
+- Path: n/a
+- Depends: watermarks-remover plugin enabled
+- What: on-demand cleanup of reader-facing prose (clean-user-facing-text) and of provenance marks in PNG/JPEG/PDF/DOCX metadata and invisible Unicode (remove-ai-marks). The automatic hook already cleans files written with Write/Edit
+- Signals: docs, manuscript, thesis or Obsidian vault repos; generated images, PDFs or DOCX meant for publication
+- Global state: plugin enabled; both skills `"off"` in `settings.json` `skillOverrides` since 2026-11-20 (doctor: 0 uses)
+- Source: watermarks-remover marketplace
+- Pin: watermarks-remover 0.7.0 at time of entry
+- Vetted: plugin already installed and in use
+- Enable: `{"skillOverrides": {"watermarks-remover:clean-user-facing-text": "on", "watermarks-remover:remove-ai-marks": "on"}}`
+- Cost: about 300 tok always-on when enabled
+- Refresh: after a plugin update, check the skill names still exist
+
+## office-documents
+
+- Type: plugin (claude.ai account skills, synced as `anthropic-skills:*`)
+- Path: n/a
+- Depends: the skills still synced from the claude.ai account
+- What: create and edit Word, PowerPoint, Excel and PDF files
+- Signals: `.docx`, `.pptx`, `.xlsx` or PDF deliverables in the repo; user asks for an office file as output (for reading office files use convert-documents-to-markdown)
+- Global state: `"off"` in `settings.json` `skillOverrides` since 2026-11-20 (doctor: 0 uses in the last month)
+- Source: claude.ai account skills
+- Pin: none (managed by claude.ai)
+- Vetted: first-party
+- Enable: `{"skillOverrides": {"anthropic-skills:docx": "on", "anthropic-skills:pptx": "on", "anthropic-skills:xlsx": "on", "anthropic-skills:pdf": "on"}}`
+- Cost: about 400 tok always-on when enabled
+- Refresh: none

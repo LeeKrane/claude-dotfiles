@@ -43,6 +43,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 - `inputNeededNotifEnabled`, `agentPushNotifEnabled`: both `true`
 - `attribution`: `commit` and `pr` both `""` (no Claude Code co-author trailer on commits, no "Generated with Claude Code" line in PRs)
 - `statusLine`: shells out to `statusline-command.sh` (needs jq)
+- `skillOverrides`: 63 unused skills set to `"off"` (no listing tokens, no `/name`), chosen by a `/doctor` usage scan on 2026-11-20. Plugins stay enabled, so their hooks keep running. Situational ones are turned back on per project through `REPO-SKILLS.md`; any one can also be turned back on in `/skills`
 
 ### Hooks
 
@@ -60,7 +61,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 | `claude-mem@thedotmack` | thedotmack/claude-mem | Persists context/memory across sessions |
 | `impeccable@impeccable` | pbakaus/impeccable | Design fluency for frontend dev (polish, audit, critique) |
 | `security-guidance@claude-plugins-official` | ships with Claude Code | Hooks-only security guardrails: pattern warnings + LLM diff review on commit/push |
-| `skill-creator@claude-plugins-official` | ships with Claude Code | Create, improve, and eval skills; description-trigger optimization |
+| `skill-creator@claude-plugins-official` | ships with Claude Code | Create, improve, and eval skills; description-trigger optimization. Disabled (`enabledPlugins: false`, 1 use since install); enable it again when you write skills |
 | `watermarks-remover@watermarks-remover` | guillaumemeyer/watermarks-remover | Removes AI provenance marks from generated files. On install it writes `WATERMARKS_HOOK_MODE` into `settings.json` and leaves a `settings.json.bak-wm` backup |
 
 `enabledPlugins` and `extraKnownMarketplaces` in `settings.json` declare these; installation itself is not versioned (see `SETUP.md`).
@@ -68,14 +69,15 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 ## CLAUDE.md
 
 - **Sub-agents** — bulk work goes through sub-agents, cheapest model first (haiku for lookups/mechanical edits, sonnet for implementation, opus only for finished-diff review or security-critical code); small bounded jobs (1–3 tool calls on a known file) run inline since spawn overhead outweighs the saving. Keeps the main thread's context small.
-- **RTK** — prefer Bash over Read/Grep/Glob so the RTK hook can rewrite calls for compact output; use `rtk lint`/`rtk tsc` for grouped errors.
+- **RTK** — prefer Bash over Read/Grep/Glob for reading and searching so the RTK hook can rewrite calls for compact output; use `rtk lint`/`rtk tsc` for grouped errors.
+- **File writes** — create and change files only with Write/Edit/MultiEdit/NotebookEdit, never through Bash, because the watermarks-remover hook only cleans files written by those tools. Exceptions: build/formatter output and `jq` settings merges.
 - **Git & PRs** — no PRs and no pushes unless explicitly asked; commit messages are subject-only, no body; never add `Co-Authored-By: Claude` or other Claude/Anthropic attribution to commits or PRs (titles, bodies, comments).
 - **CodeGraph** — the block between the `CODEGRAPH_START`/`CODEGRAPH_END` markers is written by the `codegraph` installer; applies only in repos with `.codegraph/`.
 - **Shell** — `cat` may be aliased to `bat` (fish/zsh/bash, machine-dependent), which corrupts piped output; always call `command cat` to bypass any alias or function.
 
 ## Skills & commands
 
-Some skills are *repo-scoped*: vetted and wanted, but deliberately never installed or enabled globally. They are recorded in `REPO-SKILLS.md` (source, pinned commit, signals, enable recipe) and installed per project by `/repo-skills`. Currently: `video-shotcraft`, `brag`, `obsidian-notes-creator`, and for `krane-solutions-business-orchestration` `hormozi-offer`, `pricing-strategy`, `business-model`, `objection-destroyer`, `marketing-council` (manual-only), for `KraneticFitness` the 11-skill `replica-skill` pack, `convert-documents-to-markdown` (anydoc, vendored with local edits in `vendor/`, needs the `anydoc` CLI from the NixOS dotfiles), and `pdf-to-obsidian-notes` (self-authored in `vendor/`: PDF to cleaned Markdown to Obsidian study notes; `Requires` the anydoc and obsidian-notes-creator entries, which `/repo-skills` installs alongside).
+Some skills are *repo-scoped*: vetted and wanted, but deliberately never installed or enabled globally. They are recorded in `REPO-SKILLS.md` (source, pinned commit, signals, enable recipe) and installed per project by `/repo-skills`. Currently: `video-shotcraft`, `brag`, `obsidian-notes-creator`, and for `krane-solutions-business-orchestration` `hormozi-offer`, `pricing-strategy`, `business-model`, `objection-destroyer`, `marketing-council` (manual-only), for `KraneticFitness` the 11-skill `replica-skill` pack, `convert-documents-to-markdown` (anydoc, vendored with local edits in `vendor/`, needs the `anydoc` CLI from the NixOS dotfiles), and `pdf-to-obsidian-notes` (self-authored in `vendor/`: PDF to cleaned Markdown to Obsidian study notes; `Requires` the anydoc and obsidian-notes-creator entries, which `/repo-skills` installs alongside). The registry also holds `plugin`-type entries for skills that are installed but turned off globally in `settings.json` `skillOverrides`, which a project turns back on with `"on"` in its `.claude/settings.local.json`: `engineering-skills` (wayfinder, setup-matt-pocock-skills, domain-modeling, grilling, prototype), `codebase-cleanup` (cleanup-session-codebase, cleanup-whole-codebase, blast-radius), `superpowers-extras`, `frontend-design` (impeccable, claude-mem design-is), `claude-mem-planning`, `claude-mem-github`, `caveman-workflows`, `caveman-cloud`, `writing-cleanup` (watermarks-remover skills) and `office-documents` (anthropic-skills docx/pptx/xlsx/pdf).
 
 ### Self-authored skills
 

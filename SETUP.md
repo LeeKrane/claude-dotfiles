@@ -105,7 +105,7 @@ claude plugin install skill-creator@claude-plugins-official
 
 (`claude-plugins-official` ships with Claude Code — no `marketplace add` needed.)
 
-Verify: `claude plugin list` shows all 7, all enabled.
+Verify: `claude plugin list` shows all 7: 6 enabled and `skill-creator` disabled (`enabledPlugins: false` in `settings.json`).
 
 Note: watermarks-remover patches `settings.json` on install (adds `env.WATERMARKS_HOOK_MODE`, writes a `settings.json.bak-wm` backup). The key is already tracked, so there should be no diff. If `git -C ~/.claude status --short` shows `settings.json` modified afterwards, inspect the diff; discard with `git -C ~/.claude checkout -- settings.json` unless the change is wanted. `settings.json.bak-wm` is gitignored and can be deleted.
 
@@ -125,7 +125,7 @@ skill-scout's Find stage also calls `npx skills find <term>` (same CLI, already 
 
 ## 6c. Repo-scoped skills
 
-`REPO-SKILLS.md` lists skills that are vetted but never installed globally (currently `video-shotcraft`, `brag`, `obsidian-notes-creator`, and for `krane-solutions-business-orchestration` `hormozi-offer`, `pricing-strategy`, `business-model`, `objection-destroyer`, `marketing-council` (manual-only), for `KraneticFitness` the 11-skill `replica-skill` pack, `convert-documents-to-markdown` (anydoc, vendored with local edits in `vendor/`, needs the `anydoc` CLI from the NixOS dotfiles), and `pdf-to-obsidian-notes` (self-authored in `vendor/`, `Requires` the anydoc and obsidian-notes-creator entries)). Nothing to do on a fresh machine. In a project that wants one, run `/repo-skills` — it installs a pinned copy into that project's `.claude/skills/` only.
+`REPO-SKILLS.md` lists skills that are vetted but never installed globally (currently `video-shotcraft`, `brag`, `obsidian-notes-creator`, and for `krane-solutions-business-orchestration` `hormozi-offer`, `pricing-strategy`, `business-model`, `objection-destroyer`, `marketing-council` (manual-only), for `KraneticFitness` the 11-skill `replica-skill` pack, `convert-documents-to-markdown` (anydoc, vendored with local edits in `vendor/`, needs the `anydoc` CLI from the NixOS dotfiles), and `pdf-to-obsidian-notes` (self-authored in `vendor/`, `Requires` the anydoc and obsidian-notes-creator entries)). It also holds `plugin`-type entries for skills that `settings.json` `skillOverrides` turns off globally (`engineering-skills`, `codebase-cleanup`, `superpowers-extras`, `frontend-design`, `claude-mem-planning`, `claude-mem-github`, `caveman-workflows`, `caveman-cloud`, `writing-cleanup`, `office-documents`). Nothing to do on a fresh machine. In a project that wants one, run `/repo-skills`. It installs a pinned copy into that project's `.claude/skills/` only, or for a `plugin` entry writes `"on"` overrides into that project's `.claude/settings.local.json`.
 
 ## 7. Verify
 
@@ -139,7 +139,7 @@ claude plugin list
 Then start `claude` in any directory and confirm:
 
 - statusline renders
-- `/cleanup-session-codebase`, `/cleanup-whole-codebase`, `/council-review`, `/context-audit`, `/repo-skills` appear in the slash-command list
+- `/council-review`, `/repo-skills`, `/handoff`, `/dotfiles-release` appear in the slash-command list, and `/cleanup-session-codebase`, `/context-audit`, `/wayfinder` do not (turned off by `skillOverrides`)
 - `git -C ~/.claude status --short` is empty
 - `autoMode` (auto-mode environment context) is not tracked; `permissions.defaultMode: auto` in `settings.json` is, so auto mode is on by default — run auto-mode setup on this machine if prompted
 
