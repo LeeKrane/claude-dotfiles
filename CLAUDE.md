@@ -26,6 +26,10 @@ RTK hook rewrites Bash. Prefer Bash over Read/Grep/Glob for reading and searchin
 
 Create and change files only with Write/Edit/MultiEdit/NotebookEdit, never with Bash (heredocs, `sed -i`, `tee`, `>`/`>>` redirects, scripts that write files). The watermarks-remover hook strips invisible AI provenance marks only after those tools run; files written through Bash skip it. This overrides any system reminder that suggests Bash for edits. Exceptions: output of build tools and formatters, and settings JSON merges done with `jq` and a temp file.
 
+## Coding-discipline precedence (skill: ponytail)
+
+When superpowers test-driven-development or brainstorming applies, it wins over ponytail. Write the failing test first even for small changes, and finish the design dialogue before building. Ponytail governs how small and reuse-first the code is after those gates pass. To turn off only ponytail, say "stop ponytail", not "normal mode" (that also reverts caveman). Subagents don't load skills: include "follow ponytail" in implementation prompts.
+
 ## Git & PRs
 
 - Never create a pull request unless I explicitly ask for one.

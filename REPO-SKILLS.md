@@ -359,3 +359,21 @@ Signals, Global state, Source, Pin, Vetted, Enable (for `plugin` type: a literal
 - Enable: `{"skillOverrides": {"anthropic-skills:docx": "on", "anthropic-skills:pptx": "on", "anthropic-skills:xlsx": "on", "anthropic-skills:pdf": "on"}}`
 - Cost: about 400 tok always-on when enabled
 - Refresh: none
+
+## condom
+
+- Type: skill
+- Path: `.`
+- Depends: none at install; its Find-it/Prove-it steps use `rg` and `curl`; optional `python3` only for the user-run `tools/check_quotes.py`
+- What: pre-ship audit of your own app for the ways it gets hacked (107 security checks: leaked keys, open RLS/Firebase rules, prices trusted from the browser, unsigned webhooks, IDOR, SSRF) and the ways it gets sued (115 legal checks: privacy, cookies and pixels, email/SMS, subscriptions, children's data, accessibility, AI disclosure); writes `CONDOM-REPORT.md`; fixes one finding per commit only after the user says go. Built for Next.js, Supabase, Firebase, Stripe and Vercel apps
+- Signals: repo `KraneticFitness` or `krane-solutions-business-orchestration`, and a backend route or deploy exists (`next`, `@supabase/supabase-js`, `firebase` or `stripe` in a `package.json`; `app/api/**/route.ts`; `vercel.json`; `supabase/migrations/`; `firestore.rules`); user asks to check the app before launch, "is my app secure", "can I get sued", or types `/condom`
+- Global state: not installed globally, not vendored into this repo
+- Source: https://github.com/murphyaidanbusiness-ux/condom
+- Pin: `855995aa0f31e184068f84aab263b1444b48a4a1`
+- Vetted: 2026-11-20, skill-scout + full council, project-scope. SkillSpector 2.12.0 `--no-llm`: 100/CRITICAL from 48 findings, all false positives (the reference files are a security-audit corpus that quotes the attacks it checks for, e.g. "169.254.169.254", "; rm -", a decompression-bomb test that says not to build one). Manual read: no phone-home, no credential reading, secrets masked to 4 chars; live-site probes are read-only, limited to the user's own site and asked for first; read-only until the user says fix. 26 legal entries are self-marked UNVERIFIED and the legal half is untested: treat legal output as leads, not law. Council: wait for backend code, since a run against docs-only repos gives false assurance. Intent: security audit + legal triage, these two repos only
+- Enable: shallow-fetch Pin into `<project>/.claude/skills/condom` and drop `.git` (fast path: copy the vetted clone `~/.cache/skill-scout/2026-11-20/condom` if its HEAD equals Pin and its tree is clean)
+- Cost: 0 always-on (manual-only via Setup); invoked: SKILL.md ≈3k tok, plus ≈40-60k tok of reference files per run, read by one subagent per reference file (`/condom security` or `/condom legal` roughly halves it)
+- Refresh: re-run skill-scout on the source, diff against Pin, re-check the UNVERIFIED list in `VERIFICATION.md`, bump Pin
+- Setup:
+  - config: `{"skillOverrides": {"condom": "user-invocable-only"}}` — hides it from the model so "is my app secure" keeps reaching `/security-review` and the security-guidance hooks; `/condom` still works when typed
+  - manual: `CONDOM-REPORT.md` lands at the project root with findings, masked key prefixes and file:line evidence; add it to the project's git exclude file (`git rev-parse --git-path info/exclude`) and do not commit it
