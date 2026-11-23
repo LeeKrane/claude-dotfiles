@@ -11,6 +11,14 @@
 !settings.json
 !statusline-command.sh
 
+!hooks/
+!hooks/**
+
+# Project settings and rules for this repo only. Never track .claude/worktrees/.
+!.claude/
+!.claude/settings.json
+!.claude/CLAUDE.md
+
 !commands/
 !commands/**
 

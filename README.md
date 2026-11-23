@@ -9,6 +9,10 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 | `CLAUDE.md` | Global instructions loaded into every session |
 | `settings.json` | Permissions, hooks, model, statusline, plugins |
 | `statusline-command.sh` | Statusline script (model, context fill, 5h/7d limits with ↻ reset times, pace-aware 7d color, prompt-cache flame/snowflake) |
+| `hooks/block-env-access.sh` | PreToolUse Bash hook that blocks commands touching `.env` files (self-authored) |
+| `hooks/test-block-env-access.sh` | Test for that hook: `bash ~/.claude/hooks/test-block-env-access.sh` prints `ALL PASS` |
+| `.claude/settings.json` | Project settings for this repo only: `worktree.bgIsolation: "none"`, so background sessions edit `main` in place |
+| `.claude/CLAUDE.md` | Rules for this repo only: edit on `main`, never commit; only `/dotfiles-release` commits |
 | `skills/cleanup-session-codebase/` | `/cleanup-session-codebase` skill (self-authored) |
 | `skills/cleanup-whole-codebase/` | `/cleanup-whole-codebase` skill (self-authored) |
 | `skills/dotfiles-apply/` | `/dotfiles-apply` skill (self-authored) |
@@ -34,9 +38,9 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 
 ## settings.json
 
-- `env`: `BASH_MAX_OUTPUT_LENGTH=150000`, `WATERMARKS_HOOK_MODE=clean` (read by the watermarks-remover plugin), `ANTHROPIC_BASE_URL=http://localhost:3456` (routes all Claude Code traffic through the teamclaude proxy; no API key/auth token set, so subscription mode stays on), `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=75` (auto-compact threshold; can only lower the default, values above it are ignored)
+- `env`: `BASH_MAX_OUTPUT_LENGTH=150000`, `WATERMARKS_HOOK_MODE=clean` (read by the watermarks-remover plugin), `ANTHROPIC_BASE_URL=http://localhost:3456` (routes all Claude Code traffic through the teamclaude proxy; no API key/auth token set, so subscription mode stays on), `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=75` (auto-compact threshold; can only lower the default, values above it are ignored), `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1` (turns off auto-updater, telemetry, error reporting and `/bug`)
 - `permissions.allow`: `mcp__codegraph__*`, `Bash(rtk read *)`, `Bash(rtk grep *)`
-- `permissions.deny`: Read/Grep on `node_modules/`, `.nuxt/`, `.output/`, `dist/`, `.data/`, `.cache/`
+- `permissions.deny`: Read/Grep on `node_modules/`, `.nuxt/`, `.output/`, `dist/`, `.data/`, `.cache/`; Read/Edit/Grep on `**/.env` and `**/.env.*` (this also blocks the Read tool on `.env.example`; deny rules allow no exceptions)
 - `permissions.defaultMode`: `auto` — safety classifier approves routine actions instead of prompting; falls back to default mode with a notice where auto mode is unavailable
 - `model`: `opus[1m]` (Opus 5.5, 1M context)
 - `outputStyle`: `Concise` (built-in style: leads with results, skips preamble and narration)
@@ -52,6 +56,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 |---|---|---|---|
 | UserPromptSubmit | `codegraph prompt-hook` | Injects CodeGraph context into the prompt | codegraph |
 | PreToolUse (Bash) | `rtk hook claude` | Rewrites Bash calls through RTK for compact output | rtk |
+| PreToolUse (Bash) | `bash ~/.claude/hooks/block-env-access.sh` | Blocks (exit 2) commands that touch `.env`, `.env.*` or `.env*`; allows `.env.example`/`.sample`/`.template`/`.tpl`/`.dist` and `.envrc`. Matches command text only, so obfuscated paths get through | bash, jq |
 
 ### Plugins
 
@@ -73,7 +78,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 - **RTK** — prefer Bash over Read/Grep/Glob for reading and searching so the RTK hook can rewrite calls for compact output; use `rtk lint`/`rtk tsc` for grouped errors.
 - **File writes** — create and change files only with Write/Edit/MultiEdit/NotebookEdit, never through Bash, because the watermarks-remover hook only cleans files written by those tools. Exceptions: build/formatter output and `jq` settings merges.
 - **Coding-discipline precedence** — superpowers TDD and brainstorming win over the `ponytail` skill (failing test first, design dialogue before building); ponytail governs how small and reuse-first the code is after that. "stop ponytail" turns off only ponytail; subagent implementation prompts say "follow ponytail".
-- **Git & PRs** — no PRs and no pushes unless explicitly asked; commit messages are subject-only, no body; never add `Co-Authored-By: Claude` or other Claude/Anthropic attribution to commits or PRs (titles, bodies, comments).
+- **Git & PRs** — no PRs and no pushes unless explicitly asked; commit messages are subject-only, no body; never add `Co-Authored-By: Claude` or other Claude/Anthropic attribution to commits or PRs (titles, bodies, comments). For this repo only, `.claude/CLAUDE.md` adds: edit on `main` without worktrees or branches, never commit; `/dotfiles-release` makes the only commits.
 - **CodeGraph** — the block between the `CODEGRAPH_START`/`CODEGRAPH_END` markers is written by the `codegraph` installer; applies only in repos with `.codegraph/`.
 - **Shell** — `cat` may be aliased to `bat` (fish/zsh/bash, machine-dependent), which corrupts piped output; always call `command cat` to bypass any alias or function.
 
