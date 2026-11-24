@@ -11,6 +11,8 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 | `statusline-command.sh` | Statusline script (model, context fill, 5h/7d limits with ↻ reset times, pace-aware 7d color, prompt-cache flame/snowflake) |
 | `hooks/block-env-access.sh` | PreToolUse Bash hook that blocks commands touching `.env` files (self-authored) |
 | `hooks/test-block-env-access.sh` | Test for that hook: `bash ~/.claude/hooks/test-block-env-access.sh` prints `ALL PASS` |
+| `hooks/patch-claude-mem-quota.sh` | SessionStart hook that patches claude-mem's worker so it stops pausing near a usage limit (self-authored) |
+| `hooks/test-patch-claude-mem-quota.sh` | Test for that hook: `bash ~/.claude/hooks/test-patch-claude-mem-quota.sh` prints `ALL PASS` |
 | `.claude/settings.json` | Project settings for this repo only: `worktree.bgIsolation: "none"`, so background sessions edit `main` in place |
 | `.claude/CLAUDE.md` | Rules for this repo only: edit on `main`, never commit; only `/dotfiles-release` commits |
 | `skills/cleanup-session-codebase/` | `/cleanup-session-codebase` skill (self-authored) |
@@ -54,6 +56,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 
 | Hook | Command | Purpose | Needs |
 |---|---|---|---|
+| SessionStart | `bash ~/.claude/hooks/patch-claude-mem-quota.sh` | Patches every cached claude-mem `worker-service.cjs`: usage thresholds and the 5-hour grace buffer go above 100%, so only a real provider rejection stops the observer, and the cooldown after a rejection drops from 30 to 2 minutes. Leaves non-matching builds alone; restarts the worker only when a file changed. Re-applies after plugin updates | bash, sed, jq, curl |
 | UserPromptSubmit | `codegraph prompt-hook` | Injects CodeGraph context into the prompt | codegraph |
 | PreToolUse (Bash) | `rtk hook claude` | Rewrites Bash calls through RTK for compact output | rtk |
 | PreToolUse (Bash) | `bash ~/.claude/hooks/block-env-access.sh` | Blocks (exit 2) commands that touch `.env`, `.env.*` or `.env*`; allows `.env.example`/`.sample`/`.template`/`.tpl`/`.dist` and `.envrc`. Matches command text only, so obfuscated paths get through | bash, jq |

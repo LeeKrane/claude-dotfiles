@@ -37,6 +37,16 @@
   "model": "opus[1m]",
   "outputStyle": "Concise",
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/patch-claude-mem-quota.sh"
+          }
+        ]
+      }
+    ],
     "UserPromptSubmit": [
       {
         "hooks": [

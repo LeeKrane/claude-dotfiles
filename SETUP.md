@@ -134,6 +134,7 @@ skill-scout's Find stage also calls `npx skills find <term>` (same CLI, already 
 ```
 jq --version && rtk --version && codegraph --version
 bash ~/.claude/hooks/test-block-env-access.sh   # prints ALL PASS
+bash ~/.claude/hooks/test-patch-claude-mem-quota.sh   # prints ALL PASS
 teamclaude status
 claude mcp list
 claude plugin list
