@@ -377,3 +377,20 @@ Signals, Global state, Source, Pin, Vetted, Enable (for `plugin` type: a literal
 - Setup:
   - config: `{"skillOverrides": {"condom": "user-invocable-only"}}` — hides it from the model so "is my app secure" keeps reaching `/security-review` and the security-guidance hooks; `/condom` still works when typed
   - manual: `CONDOM-REPORT.md` lands at the project root with findings, masked key prefixes and file:line evidence; add it to the project's git exclude file (`git rev-parse --git-path info/exclude`) and do not commit it
+
+## pocock-extras
+
+- Type: plugin (own skills in `~/.claude/skills/`, disabled by `skillOverrides`)
+- Path: `skills/wizard`, `skills/codebase-design`
+- Depends: wizard writes `.env` files and sets GitHub secrets with `gh` (both from a script the user runs); codebase-design has none
+- What: `wizard` generates an interactive bash script that walks the user through steps only a human can do (dashboards, credentials, CI secrets, cutovers); `codebase-design` is a deep-module vocabulary (module, interface, depth, seam, adapter, leverage, locality) with a design-it-twice pattern that runs parallel subagents
+- Signals: repo `kranetic` (active there since 2026-11-24); design-first work on module structure; manual credential, signing-key or CI-secret setup; `improve-codebase-architecture` in use (it calls codebase-design)
+- Global state: installed in `~/.claude/skills/`, `"off"` in `settings.json` `skillOverrides` since 2026-11-24
+- Source: https://github.com/mattpocock/skills (`skills/engineering/wizard`, `skills/engineering/codebase-design`)
+- Pin: `d65391149dbb5fe76478e76fa8d5122b2aa5a70e`
+- Vetted: 2026-11-24, skill-scout + full council, project-scope. SkillSpector `--no-llm`: wizard 26/MEDIUM (credential access on `template.sh:106` is the `.env` upsert helper the user runs, false positive), codebase-design 0/LOW. Manual read: no phone-home, no credential reading by the agent, secrets entered hidden and written to a 0600 `.env`. Local edit: `DESIGN-IT-TWICE.md` says `CONTEXT.md` instead of `GLOSSARY.md`
+- Enable: `{"skillOverrides": {"wizard": "on", "codebase-design": "on"}}`
+- Cost: about 82 tok (wizard) + 70 tok (codebase-design) always-on when enabled; invoked: wizard ≈3.4k tok, codebase-design ≈1.6k tok plus ≈1.4k of reference files
+- Refresh: re-run skill-scout on the source, diff against Pin, re-apply the local edit, bump Pin
+- Setup:
+  - manual: kranetic keeps secrets in SOPS; tell wizard where values go (SOPS file, not `.env`) before it writes stages. The `block-env-access` hook stops the agent from reading `.env` during scoping; point it at `.env.example` instead

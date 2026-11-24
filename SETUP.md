@@ -121,13 +121,15 @@ npx -y skills@latest add ngmeyer/skills --skill council-review --agent claude-co
 
 After an update run, review the diff before committing — skills are re-vetted on refresh (see CHANGELOG v3).
 
+`skills/to-spec/`, `to-tickets/`, `implement/`, `implement-spec/`, `spec-review/`, `improve-codebase-architecture/`, `teach/`, `to-questionnaire/`, `wizard/` and `codebase-design/` are pinned copies of mattpocock/skills@d653911 with local edits (see the provenance comment in each SKILL.md), not CLI installs. Do not add them with `npx skills`: that would overwrite the edits (see CHANGELOG v32).
+
 `skills/ponytail/` is a pinned copy of DietrichGebert/ponytail@96608e0 (core skill only), not a CLI install. Do not re-install it with `npx skills` or the ponytail plugin marketplace: the plugin brings hooks this setup deliberately skips (see CHANGELOG v27).
 
 skill-scout's Find stage also calls `npx skills find <term>` (same CLI, already covered above) and, for higher-volume search, the findskills.org API. Optionally set `FINDSKILLS_API_KEY` (free key via `npx findskills auth` or findskills.org/developers) — without it, Find still works but findskills allows only one guest query per run before rate-limiting.
 
 ## 6c. Repo-scoped skills
 
-`REPO-SKILLS.md` lists skills that are vetted but never installed globally (currently `video-shotcraft`, `brag`, `obsidian-notes-creator`, and for `krane-solutions-business-orchestration` `hormozi-offer`, `pricing-strategy`, `business-model`, `objection-destroyer`, `marketing-council` (manual-only), for `KraneticFitness` the 11-skill `replica-skill` pack, `convert-documents-to-markdown` (anydoc, vendored with local edits in `vendor/`, needs the `anydoc` CLI from the NixOS dotfiles), `pdf-to-obsidian-notes` (self-authored in `vendor/`, `Requires` the anydoc and obsidian-notes-creator entries), and for both `KraneticFitness` and `krane-solutions-business-orchestration` `condom` (manual-only)). It also holds `plugin`-type entries for skills that `settings.json` `skillOverrides` turns off globally (`engineering-skills`, `codebase-cleanup`, `superpowers-extras`, `frontend-design`, `claude-mem-planning`, `claude-mem-github`, `caveman-workflows`, `caveman-cloud`, `writing-cleanup`, `office-documents`). Nothing to do on a fresh machine. In a project that wants one, run `/repo-skills`. It installs a pinned copy into that project's `.claude/skills/` only, or for a `plugin` entry writes `"on"` overrides into that project's `.claude/settings.local.json`.
+`REPO-SKILLS.md` lists skills that are vetted but never installed globally (currently `video-shotcraft`, `brag`, `obsidian-notes-creator`, and for `krane-solutions-business-orchestration` `hormozi-offer`, `pricing-strategy`, `business-model`, `objection-destroyer`, `marketing-council` (manual-only), for `KraneticFitness` the 11-skill `replica-skill` pack, `convert-documents-to-markdown` (anydoc, vendored with local edits in `vendor/`, needs the `anydoc` CLI from the NixOS dotfiles), `pdf-to-obsidian-notes` (self-authored in `vendor/`, `Requires` the anydoc and obsidian-notes-creator entries), and for both `KraneticFitness` and `krane-solutions-business-orchestration` `condom` (manual-only)). It also holds `plugin`-type entries for skills that `settings.json` `skillOverrides` turns off globally (`engineering-skills`, `codebase-cleanup`, `superpowers-extras`, `frontend-design`, `claude-mem-planning`, `claude-mem-github`, `caveman-workflows`, `caveman-cloud`, `writing-cleanup`, `office-documents`, `pocock-extras`). Nothing to do on a fresh machine. In a project that wants one, run `/repo-skills`. It installs a pinned copy into that project's `.claude/skills/` only, or for a `plugin` entry writes `"on"` overrides into that project's `.claude/settings.local.json`.
 
 ## 7. Verify
 
@@ -143,7 +145,7 @@ claude plugin list
 Then start `claude` in any directory and confirm:
 
 - statusline renders
-- `/council-review`, `/repo-skills`, `/handoff`, `/dotfiles-release` appear in the slash-command list, and `/cleanup-session-codebase`, `/context-audit`, `/wayfinder` do not (turned off by `skillOverrides`)
+- `/council-review`, `/repo-skills`, `/handoff`, `/dotfiles-release`, `/to-spec`, `/spec-review` appear in the slash-command list, and `/cleanup-session-codebase`, `/context-audit`, `/wayfinder`, `/wizard`, `/codebase-design` do not (turned off by `skillOverrides`)
 - `git -C ~/.claude status --short` is empty
 - `autoMode` (auto-mode environment context) is not tracked; `permissions.defaultMode: auto` in `settings.json` is, so auto mode is on by default — run auto-mode setup on this machine if prompted
 

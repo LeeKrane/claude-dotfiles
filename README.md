@@ -33,6 +33,16 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 | `skills/technical-writing/` | `technical-writing` skill (cursor/plugins pstack, via `npx skills`) |
 | `skills/blast-radius/` | `blast-radius` skill (cursor/plugins pstack, via `npx skills`) |
 | `skills/unslop/` | `unslop` skill (cursor/plugins pstack, via `npx skills`; CLAUDE.md-gated) |
+| `skills/to-spec/` | `/to-spec` skill (mattpocock/skills@d653911, pinned copy) |
+| `skills/to-tickets/` | `/to-tickets` skill (mattpocock/skills@d653911, pinned copy) |
+| `skills/implement/` | `/implement` skill (mattpocock/skills@d653911, pinned copy; Skill calls remapped) |
+| `skills/implement-spec/` | `/implement-spec` skill (mattpocock/skills@d653911, pinned copy; Skill calls remapped) |
+| `skills/spec-review/` | `/spec-review` skill (mattpocock/skills@d653911, pinned copy; renamed from upstream `code-review`) |
+| `skills/improve-codebase-architecture/` | `/improve-codebase-architecture` skill (mattpocock/skills@d653911, pinned copy; `CONTEXT.md` edit) |
+| `skills/teach/` | `/teach` skill (mattpocock/skills@d653911, pinned copy) |
+| `skills/to-questionnaire/` | `/to-questionnaire` skill (mattpocock/skills@d653911, pinned copy) |
+| `skills/wizard/` | `wizard` skill (mattpocock/skills@d653911, pinned copy; off by `skillOverrides`, enabled per project via `pocock-extras`) |
+| `skills/codebase-design/` | `codebase-design` skill (mattpocock/skills@d653911, pinned copy; `CONTEXT.md` edit; off by `skillOverrides`, enabled per project via `pocock-extras`) |
 | `skills/ponytail/` | `ponytail` core skill only (DietrichGebert/ponytail@96608e0, pinned copy; no plugin or hooks; superpowers precedence set in CLAUDE.md) |
 | `REPO-SKILLS.md` | Registry of repo-scoped skills (vetted, never global), installed per project via `/repo-skills` |
 | `vendor/` | Locally edited or self-authored repo-scoped skills that `REPO-SKILLS.md` entries install from (provenance comment in each SKILL.md) |
@@ -50,7 +60,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 - `inputNeededNotifEnabled`, `agentPushNotifEnabled`: both `true`
 - `attribution`: `commit` and `pr` both `""` (no Claude Code co-author trailer on commits, no "Generated with Claude Code" line in PRs)
 - `statusLine`: shells out to `statusline-command.sh` (needs jq)
-- `skillOverrides`: 63 unused skills set to `"off"` (no listing tokens, no `/name`), chosen by a `/doctor` usage scan on 2026-11-20. Plugins stay enabled, so their hooks keep running. Situational ones are turned back on per project through `REPO-SKILLS.md`; any one can also be turned back on in `/skills`
+- `skillOverrides`: 65 skills set to `"off"` (no listing tokens, no `/name`): 63 unused ones chosen by a `/doctor` usage scan on 2026-11-20, plus `wizard` and `codebase-design` (2026-11-24). Plugins stay enabled, so their hooks keep running. Situational ones are turned back on per project through `REPO-SKILLS.md`; any one can also be turned back on in `/skills`
 
 ### Hooks
 
@@ -88,7 +98,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 
 ## Skills & commands
 
-Some skills are *repo-scoped*: vetted and wanted, but deliberately never installed or enabled globally. They are recorded in `REPO-SKILLS.md` (source, pinned commit, signals, enable recipe) and installed per project by `/repo-skills`. Currently: `video-shotcraft`, `brag`, `obsidian-notes-creator`, and for `krane-solutions-business-orchestration` `hormozi-offer`, `pricing-strategy`, `business-model`, `objection-destroyer`, `marketing-council` (manual-only), for `KraneticFitness` the 11-skill `replica-skill` pack, `convert-documents-to-markdown` (anydoc, vendored with local edits in `vendor/`, needs the `anydoc` CLI from the NixOS dotfiles), `pdf-to-obsidian-notes` (self-authored in `vendor/`: PDF to cleaned Markdown to Obsidian study notes; `Requires` the anydoc and obsidian-notes-creator entries, which `/repo-skills` installs alongside), and for both `KraneticFitness` and `krane-solutions-business-orchestration` `condom` (manual-only pre-ship security and legal audit, once backend code exists). The registry also holds `plugin`-type entries for skills that are installed but turned off globally in `settings.json` `skillOverrides`, which a project turns back on with `"on"` in its `.claude/settings.local.json`: `engineering-skills` (wayfinder, setup-matt-pocock-skills, domain-modeling, grilling, prototype), `codebase-cleanup` (cleanup-session-codebase, cleanup-whole-codebase, blast-radius), `superpowers-extras`, `frontend-design` (impeccable, claude-mem design-is), `claude-mem-planning`, `claude-mem-github`, `caveman-workflows`, `caveman-cloud`, `writing-cleanup` (watermarks-remover skills) and `office-documents` (anthropic-skills docx/pptx/xlsx/pdf).
+Some skills are *repo-scoped*: vetted and wanted, but deliberately never installed or enabled globally. They are recorded in `REPO-SKILLS.md` (source, pinned commit, signals, enable recipe) and installed per project by `/repo-skills`. Currently: `video-shotcraft`, `brag`, `obsidian-notes-creator`, and for `krane-solutions-business-orchestration` `hormozi-offer`, `pricing-strategy`, `business-model`, `objection-destroyer`, `marketing-council` (manual-only), for `KraneticFitness` the 11-skill `replica-skill` pack, `convert-documents-to-markdown` (anydoc, vendored with local edits in `vendor/`, needs the `anydoc` CLI from the NixOS dotfiles), `pdf-to-obsidian-notes` (self-authored in `vendor/`: PDF to cleaned Markdown to Obsidian study notes; `Requires` the anydoc and obsidian-notes-creator entries, which `/repo-skills` installs alongside), and for both `KraneticFitness` and `krane-solutions-business-orchestration` `condom` (manual-only pre-ship security and legal audit, once backend code exists). The registry also holds `plugin`-type entries for skills that are installed but turned off globally in `settings.json` `skillOverrides`, which a project turns back on with `"on"` in its `.claude/settings.local.json`: `engineering-skills` (wayfinder, setup-matt-pocock-skills, domain-modeling, grilling, prototype), `codebase-cleanup` (cleanup-session-codebase, cleanup-whole-codebase, blast-radius), `superpowers-extras`, `frontend-design` (impeccable, claude-mem design-is), `claude-mem-planning`, `claude-mem-github`, `caveman-workflows`, `caveman-cloud`, `writing-cleanup` (watermarks-remover skills), `office-documents` (anthropic-skills docx/pptx/xlsx/pdf) and `pocock-extras` (wizard, codebase-design).
 
 ### Self-authored skills
 
@@ -110,6 +120,16 @@ Some skills are *repo-scoped*: vetted and wanted, but deliberately never install
 - `prototype` — builds throwaway prototypes to answer one design question: a clickable state-machine HTML demo (logic) or URL-param-switchable UI variants (look).
 - `grilling` — interviews the user in structured rounds over a design tree until every decision is settled; wayfinder's conversation primitive.
 - `/setup-matt-pocock-skills` — one-time per-repo scaffolding: issue-tracker choice, triage labels, and domain-doc layout that wayfinder and friends read.
+- `/to-spec` (mattpocock/skills@d653911, pinned copy) — turns the current conversation into a spec on the project's issue tracker, without an interview.
+- `/to-tickets` (same pin) — splits a plan, spec, or conversation into tracer-bullet tickets that declare their blocking edges, published to the configured tracker.
+- `/implement` (same pin) — implements a piece of work from a spec or tickets; calls `superpowers:test-driven-development` and `/spec-review` (local edit).
+- `/implement-spec` (same pin) — implements the result of `/to-spec` and `/to-tickets` ticket by ticket; same local Skill remaps as `/implement`.
+- `/spec-review` (same pin; upstream `code-review`, renamed so the built-in `/code-review` stays the default) — reviews the diff since a fixed point on two axes in parallel subagents: repo coding standards and the originating spec.
+- `/improve-codebase-architecture` (same pin; uses `CONTEXT.md`) — scans for deepening opportunities, presents them as an HTML report, then grills through the one you pick. Calls `codebase-design`, which is off globally; enable `pocock-extras` in projects that use it.
+- `/teach` (same pin) — stateful teaching across sessions: mission, glossary, resources and a learning record in the workspace.
+- `/to-questionnaire` (same pin) — turns a decision you can't answer alone into a Markdown questionnaire for someone else to fill in.
+- `wizard` (same pin; off globally, `pocock-extras` in `REPO-SKILLS.md`) — generates an interactive bash script from `template.sh` that walks a human through manual steps (dashboards, credentials, CI secrets, cutovers).
+- `codebase-design` (same pin; off globally, `pocock-extras`) — deep-module vocabulary (module, interface, depth, seam, adapter, leverage, locality) and a design-it-twice pattern with parallel subagents.
 - `ponytail` (DietrichGebert/ponytail@96608e0, core skill only, pinned copy) — "lazy senior dev" mode: smallest complete change, reuse before new code, no speculative abstraction, replies end with what was skipped; levels `/ponytail lite|full|ultra`. Yields to superpowers TDD/brainstorming per CLAUDE.md.
 - `/technical-writing` — layered doc standard (Diátaxis mode, Google developer style, STE sentence rules, Global English) for docs, RFCs, readmes, and PR descriptions.
 - `/blast-radius` — hunts what a change breaks beyond the diff and proves the one safety fact by running real code; unproven stays labeled unproven.

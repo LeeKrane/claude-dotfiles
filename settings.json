@@ -195,6 +195,8 @@
     "cleanup-session-codebase": "off",
     "cleanup-whole-codebase": "off",
     "setup-matt-pocock-skills": "off",
-    "wayfinder": "off"
+    "wayfinder": "off",
+    "wizard": "off",
+    "codebase-design": "off"
   }
 }
