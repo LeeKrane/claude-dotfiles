@@ -33,6 +33,7 @@
     "defaultMode": "auto"
   },
   "model": "opus[1m]",
+  "autoCompactWindow": 400000,
   "outputStyle": "Concise",
   "hooks": {
     "SessionStart": [

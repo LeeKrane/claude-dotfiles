@@ -1,6 +1,6 @@
 # Claude Code config
 
-Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.claude`. New machine: see `SETUP.md`. Claude Code is routed through billion-context and the teamclaude proxy by the shell environment, not by `settings.json` — see the note at the top of `SETUP.md`.
+Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.claude`. New machine: see `SETUP.md`. Claude Code is routed through the teamclaude proxy by the shell environment, not by `settings.json` — see the note at the top of `SETUP.md`.
 
 ## Layout
 
@@ -55,6 +55,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 - `permissions.deny`: Read/Grep on `node_modules/`, `.nuxt/`, `.output/`, `dist/`, `.data/`, `.cache/`; Read/Edit/Grep on `**/.env` and `**/.env.*` (this also blocks the Read tool on `.env.example`; deny rules allow no exceptions)
 - `permissions.defaultMode`: `auto` — safety classifier approves routine actions instead of prompting; falls back to default mode with a notice where auto mode is unavailable
 - `model`: `opus[1m]` (Opus 5.5, 1M context)
+- `autoCompactWindow`: `400000` (auto-compact budgets against 400K, not the 1M window; applies to every launch, `claude-plain` included)
 - `outputStyle`: `Concise` (built-in style: leads with results, skips preamble and narration)
 - `modelSettings`: pins Opus 5.5 effort to `medium` (its default; set via `/model`)
 - `inputNeededNotifEnabled`, `agentPushNotifEnabled`: both `true`
@@ -151,8 +152,7 @@ Each machine keeps its own installed version in `.dotfiles-version`, a local, gi
 | codegraph | UserPromptSubmit hook, MCP server, CLAUDE.md |
 | rtk | PreToolUse hook, permissions |
 | jq | statusline, SETUP teamclaude step |
-| teamclaude | mandatory: pools Team/Enterprise seats, rotates on quota; per-user service on port 3456, pinned `1.1.21` with `autoUpdate: false` (SETUP step 3b; NixOS hosts get it from `~/.dotfiles` instead of npm) |
-| billion-context | NixOS hosts via `~/.dotfiles` only: pinned `0.1.216` with hardening env (no auto-update, advisories, release notes or SQLite download), MITM proxy service on `127.0.0.1:28787` chained to teamclaude; the fish `claude` function routes through it, `claude-cm` does the same with Code Mode, `claude-plain` is stock Claude Code |
+| teamclaude | mandatory: pools Team/Enterprise seats, rotates on quota; per-user service on port 3456, pinned `1.1.21` with `autoUpdate: false` (SETUP step 3b; NixOS hosts get it from `~/.dotfiles` instead of npm); on NixOS hosts the fish `claude` function runs Claude Code with Code Mode through its MITM (refuses to start if teamclaude is down; falls back to the base URL without Code Mode if its CA is missing), `claude-plain` is stock Claude Code |
 | bat | optional; only backs the `cat` alias |
 
 ## Not tracked

@@ -77,7 +77,7 @@ Check settings.json for:
 
 | Setting | Flag if | Recommended |
 |---------|---------|-------------|
-| autocompact_percentage_override | Missing or > 80 | 75 |
+| Auto-compact threshold: `modelSettings.<model>.autoCompactWindow` (wins over the top level), `autoCompactWindow`, or `CLAUDE_CODE_AUTO_COMPACT_WINDOW` / `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` in settings `env` or the process env (`printenv`); `"auto"` means the model window, so it is flagged like one | None set; a window at or above the main model's context window; percentage > 80 | A window below the model window, sized to the working budget, or a percentage ≤ 80 |
 | BASH_MAX_OUTPUT_LENGTH (env) | At default (30-50K) | 150000 |
 
 ### File Permissions
@@ -102,7 +102,7 @@ Score starts at 100. Deduct per issue:
 | CLAUDE.md > 500 lines | -20 |
 | Per 5 rules flagged by filters | -5 |
 | Contradictions between files | -10 |
-| Missing autocompact override | -10 |
+| Missing or ineffective auto-compact threshold | -10 |
 | Missing bash output override | -5 |
 | Skill > 200 lines | -5 each |
 | Skill > 500 lines | -10 each |
