@@ -2,6 +2,10 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v33 — 2026-11-24
+
+Split the fish launcher (shipped by `~/.dotfiles` on NixOS hosts): `claude` now runs without Code Mode by default, still routed through `HTTPS_PROXY` to the billion-context MITM service (`127.0.0.1:28787`) chained to teamclaude. New fish function `claude-cm` takes the same route and adds experimental Code Mode (`CLAUDE_CODE_EXPERIMENTAL_CODE_MODE`). `claude-plain` is unchanged. README external-tools table, SETUP.md routing note, and skill-scout stack-fit notes updated to name `claude-cm`. No settings, plugin, or hook changes in this repo; machines pick up the functions from `~/.dotfiles`.
+
 ## v32 — 2026-11-24
 
 Added 10 skills from mattpocock/skills, pinned at `d65391149dbb`. They are pinned copies under `skills/`, not `npx skills` installs, and each SKILL.md opens with a provenance comment that names the source path and any local edits. Vetted 2026-11-24 by skill-scout (SkillSpector + manual read) with a full council.

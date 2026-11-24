@@ -152,7 +152,7 @@ Each machine keeps its own installed version in `.dotfiles-version`, a local, gi
 | rtk | PreToolUse hook, permissions |
 | jq | statusline, SETUP teamclaude step |
 | teamclaude | mandatory: pools Team/Enterprise seats, rotates on quota; per-user service on port 3456, pinned `1.1.21` with `autoUpdate: false` (SETUP step 3b; NixOS hosts get it from `~/.dotfiles` instead of npm) |
-| billion-context | NixOS hosts via `~/.dotfiles` only: pinned `0.1.216` with hardening env (no auto-update, advisories, release notes or SQLite download), MITM proxy service on `127.0.0.1:28787` chained to teamclaude; the fish `claude` function routes through it with Code Mode, `claude-plain` is stock Claude Code |
+| billion-context | NixOS hosts via `~/.dotfiles` only: pinned `0.1.216` with hardening env (no auto-update, advisories, release notes or SQLite download), MITM proxy service on `127.0.0.1:28787` chained to teamclaude; the fish `claude` function routes through it, `claude-cm` does the same with Code Mode, `claude-plain` is stock Claude Code |
 | bat | optional; only backs the `cat` alias |
 
 ## Not tracked
