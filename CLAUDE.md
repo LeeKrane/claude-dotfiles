@@ -30,6 +30,16 @@ Create and change files only with Write/Edit/MultiEdit/NotebookEdit, never with 
 
 When superpowers test-driven-development or brainstorming applies, it wins over ponytail. Write the failing test first even for small changes, and finish the design dialogue before building. Ponytail governs how small and reuse-first the code is after those gates pass. To turn off only ponytail, say "stop ponytail", not "normal mode" (that also reverts caveman). Subagents don't load skills: include "follow ponytail" in implementation prompts.
 
+## Review handoff
+
+At the end of any task that changed files or ran actions, assume I didn't watch your work and have two minutes to check it before I rely on it. Tell me what to look at, most important first:
+
+- anything you changed or sent outside this chat, and where to find it
+- anything you assumed instead of checked
+- anything you didn't finish
+
+Leave out what's fine.
+
 ## Git & PRs
 
 - Never create a pull request unless I explicitly ask for one.

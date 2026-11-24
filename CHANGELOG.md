@@ -2,6 +2,10 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v30 — 2026-11-24
+
+`CLAUDE.md`: new "Review handoff" section. At the end of any task that changed files or ran actions, Claude now tells the user what to check first, most important first: anything changed or sent outside the chat and where to find it, anything assumed instead of checked, and anything unfinished. Things that are fine are left out. Instruction-only change: no plugins, hooks, settings or tools changed. Nothing to install on other machines beyond the `git pull`; new sessions pick up the rule. README updated; SETUP.md unaffected.
+
 ## v29 — 2026-11-24
 
 `settings.json`: new SessionStart hook `bash ~/.claude/hooks/patch-claude-mem-quota.sh`. New self-authored files: `hooks/patch-claude-mem-quota.sh` and its test `hooks/test-patch-claude-mem-quota.sh` (prints `ALL PASS`). The hook patches every cached claude-mem `plugins/cache/*/claude-mem/*/scripts/worker-service.cjs` in place. It raises the usage-window thresholds and the 5-hour grace buffer above 100%, so only a real "rejected" status from the provider stops the memory observer. It also cuts the cooldown after a rejection from 30 to 2 minutes, so switching subscriptions takes effect quickly. Patterns match values, not minified names, so the patch re-applies after plugin updates; builds that no longer match are left alone. When a file changed, the hook restarts the claude-mem worker through `POST /api/admin/restart` on `CLAUDE_MEM_WORKER_PORT` (default 37700). Needs bash, sed, jq and curl, all already present. Nothing to install on other machines beyond the `git pull`; restart Claude Code to load the hook. README and SETUP.md updated.
