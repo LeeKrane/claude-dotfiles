@@ -1,6 +1,6 @@
 # Claude Code config
 
-Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.claude`. New machine: see `SETUP.md`. Setting up via Claude itself (following `SETUP.md` or running `/dotfiles-apply`) only works after temporarily removing `ANTHROPIC_BASE_URL` from `settings.json` until the teamclaude proxy runs — see the note at the top of `SETUP.md`.
+Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.claude`. New machine: see `SETUP.md`. Claude Code is routed through billion-context and the teamclaude proxy by the shell environment, not by `settings.json` — see the note at the top of `SETUP.md`.
 
 ## Layout
 
@@ -40,7 +40,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 
 ## settings.json
 
-- `env`: `BASH_MAX_OUTPUT_LENGTH=150000`, `WATERMARKS_HOOK_MODE=clean` (read by the watermarks-remover plugin), `ANTHROPIC_BASE_URL=http://localhost:3456` (routes all Claude Code traffic through the teamclaude proxy; no API key/auth token set, so subscription mode stays on), `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=75` (auto-compact threshold; can only lower the default, values above it are ignored), `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1` (turns off auto-updater, telemetry, error reporting and `/bug`)
+- `env`: `BASH_MAX_OUTPUT_LENGTH=150000`, `WATERMARKS_HOOK_MODE=clean` (read by the watermarks-remover plugin), `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1` (turns off auto-updater, telemetry, error reporting and `/bug`)
 - `permissions.allow`: `mcp__codegraph__*`, `Bash(rtk read *)`, `Bash(rtk grep *)`
 - `permissions.deny`: Read/Grep on `node_modules/`, `.nuxt/`, `.output/`, `dist/`, `.data/`, `.cache/`; Read/Edit/Grep on `**/.env` and `**/.env.*` (this also blocks the Read tool on `.env.example`; deny rules allow no exceptions)
 - `permissions.defaultMode`: `auto` — safety classifier approves routine actions instead of prompting; falls back to default mode with a notice where auto mode is unavailable
@@ -132,6 +132,7 @@ Each machine keeps its own installed version in `.dotfiles-version`, a local, gi
 | rtk | PreToolUse hook, permissions |
 | jq | statusline, SETUP teamclaude step |
 | teamclaude | mandatory: pools Team/Enterprise seats, rotates on quota; per-user service on port 3456, pinned `1.1.21` with `autoUpdate: false` (SETUP step 3b; NixOS hosts get it from `~/.dotfiles` instead of npm) |
+| billion-context | NixOS hosts via `~/.dotfiles` only: pinned `0.1.216` with hardening env (no auto-update, advisories, release notes or SQLite download), MITM proxy service on `127.0.0.1:28787` chained to teamclaude; the fish `claude` function routes through it with Code Mode, `claude-plain` is stock Claude Code |
 | bat | optional; only backs the `cat` alias |
 
 ## Not tracked

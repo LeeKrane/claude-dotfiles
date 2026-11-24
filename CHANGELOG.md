@@ -2,6 +2,10 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v31 — 2026-11-24
+
+`settings.json` `env`: removed `ANTHROPIC_BASE_URL=http://localhost:3456` and `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=75`. Settings `env` overrides the launch environment, which disabled Code Mode and bypassed billion-context. Routing now comes from the shell. On NixOS hosts, `~/.dotfiles` exports `ANTHROPIC_BASE_URL` as a session variable and runs teamclaude on every host, Pis included. It also installs billion-context 0.1.216 as a hardened MITM proxy service on `127.0.0.1:28787`, chained to teamclaude. The fish function `claude` runs Claude Code with experimental Code Mode (`CLAUDE_CODE_EXPERIMENTAL_CODE_MODE=1`) and `CLAUDE_CODE_AUTO_COMPACT_WINDOW=400000` through that proxy. `claude-plain` is stock Claude Code: no teamclaude, no billion-context, no Code Mode. Non-NixOS machines must add `export ANTHROPIC_BASE_URL=http://localhost:3456` to their shell profile, or `claude` silently skips teamclaude. `SETUP.md`: routing note rewritten, a working bypass (`env -u ANTHROPIC_BASE_URL claude`), an upgrade note, and a warning never to export `HTTPS_PROXY` globally. `README.md`: `env` list and tools table updated, new billion-context row. `skills/skill-scout/SKILL.md`: the stack-fit check now covers routing through billion-context's MITM, and the fact that non-Node tools inside a `claude` session need a CA bundle with the system CAs plus the MITM CA. No plugins, hooks or skills added or removed.
+
 ## v30 — 2026-11-24
 
 `CLAUDE.md`: new "Review handoff" section. At the end of any task that changed files or ran actions, Claude now tells the user what to check first, most important first: anything changed or sent outside the chat and where to find it, anything assumed instead of checked, and anything unfinished. Things that are fine are left out. Instruction-only change: no plugins, hooks, settings or tools changed. Nothing to install on other machines beyond the `git pull`; new sessions pick up the rule. README updated; SETUP.md unaffected.
