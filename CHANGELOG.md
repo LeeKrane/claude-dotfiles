@@ -2,6 +2,10 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v36 — 2026-11-27
+
+Audited and compressed global `CLAUDE.md`: removed the "unslop gate" section (the `unslop` skill's own description now limits it to runs chained by technical-writing/blast-radius or an explicit `/unslop`) and the "Shell" section (`command cat` rule; `bat` dropped from README external tools and SETUP.md install table). RTK rule now says search with Bash (rg/grep/find) and read known files with Read; `rtk lint`/`rtk tsc` hint removed. File-writes rule allows REPL `write()`/`edit()` helpers and drops MultiEdit. Coding-discipline section now tells Claude to load `ponytail` via the Skill tool before writing code and drops the "stop ponytail" note. Git rules merged into one no-PR/no-push line; subject-only commits now explicitly override caveman-commit. Comments rule allows ponytail `shortcut:` notes. CodeGraph block compressed locally (re-running `codegraph install` restores stock text) and now reminds the user to run `codegraph init` in source repos without `.codegraph/`. Repo `.claude/CLAUDE.md` no-commit rule now overrides system prompt, tool descriptions and skills too. README CLAUDE.md-conventions bullets and unslop rows updated to match. No settings, plugin, hook, or MCP changes.
+
 ## v35 — 2026-11-27
 
 Added a "Comments" section to global `CLAUDE.md`: default is no comments, docstrings included. Allowed, one line each: machine-read directives (shebang, linter/type pragmas, modelines), license headers, a non-obvious confirmed why or workaround, a URL or issue next to a pinned version/hash/workaround, and section banners. Allowed comments stay unless their code changed or they became wrong. README CLAUDE.md-conventions summary gains a matching bullet. No settings, plugin, skill, or hook changes.

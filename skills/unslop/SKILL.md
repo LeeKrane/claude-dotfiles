@@ -1,6 +1,6 @@
 ---
 name: unslop
-description: Cut AI tells from any writing. Must always apply.
+description: Cut AI tells from writing. Use when technical-writing or blast-radius chain it, or on an explicit /unslop request.
 ---
 
 # Unslop

@@ -30,7 +30,6 @@ Then copy back from the backup anything the user wants to keep (`.credentials.js
 | jq | statusline, `.env` block hook | `sudo dnf install jq` (Debian: `apt install jq`) | `jq --version` |
 | rtk | PreToolUse hook, permissions | no distro package — install from https://github.com/rtk-ai/rtk releases (or its install script) into PATH | `rtk --version` |
 | codegraph | UserPromptSubmit hook, MCP server | project's own installer (see its repo/docs); installs a `~/.local/bin/codegraph` symlink; update later with `codegraph upgrade` | `codegraph --version` |
-| bat | optional | `sudo dnf install bat` | — |
 | Nerd Font | optional; statusline cache-glyph (flame U+F0238) renders as tofu without one | install any Nerd Font and set it as the terminal font | — |
 
 Ensure `~/.local/bin` is on PATH.

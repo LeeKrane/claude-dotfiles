@@ -32,7 +32,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 | `skills/setup-matt-pocock-skills/` | `setup-matt-pocock-skills` skill (mattpocock/skills, via `npx skills`) |
 | `skills/technical-writing/` | `technical-writing` skill (cursor/plugins pstack, via `npx skills`) |
 | `skills/blast-radius/` | `blast-radius` skill (cursor/plugins pstack, via `npx skills`) |
-| `skills/unslop/` | `unslop` skill (cursor/plugins pstack, via `npx skills`; CLAUDE.md-gated) |
+| `skills/unslop/` | `unslop` skill (cursor/plugins pstack, via `npx skills`; description narrowed locally) |
 | `skills/to-spec/` | `/to-spec` skill (mattpocock/skills@d653911, pinned copy) |
 | `skills/to-tickets/` | `/to-tickets` skill (mattpocock/skills@d653911, pinned copy) |
 | `skills/implement/` | `/implement` skill (mattpocock/skills@d653911, pinned copy; Skill calls remapped) |
@@ -89,14 +89,13 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 ## CLAUDE.md
 
 - **Sub-agents** — bulk work goes through sub-agents, cheapest model first (haiku for lookups/mechanical edits, sonnet for implementation, opus only for finished-diff review or security-critical code); small bounded jobs (1–3 tool calls on a known file) run inline since spawn overhead outweighs the saving. Keeps the main thread's context small.
-- **RTK** — prefer Bash over Read/Grep/Glob for reading and searching so the RTK hook can rewrite calls for compact output; use `rtk lint`/`rtk tsc` for grouped errors.
-- **File writes** — create and change files only with Write/Edit/MultiEdit/NotebookEdit, never through Bash, because the watermarks-remover hook only cleans files written by those tools. Exceptions: build/formatter output and `jq` settings merges.
-- **Coding-discipline precedence** — superpowers TDD and brainstorming win over the `ponytail` skill (failing test first, design dialogue before building); ponytail governs how small and reuse-first the code is after that. "stop ponytail" turns off only ponytail; subagent implementation prompts say "follow ponytail".
+- **RTK** — search with Bash (rg/grep/find) so the RTK hook compacts output; read known files with Read.
+- **File writes** — create and change files only with Write/Edit/NotebookEdit or the REPL `write()`/`edit()` helpers, never through Bash, because the watermarks-remover hook only cleans files written by those tools. Exceptions: build/formatter output and `jq` settings merges.
+- **Coding-discipline precedence** — superpowers TDD and brainstorming win over the `ponytail` skill (failing test first, design dialogue before building); ponytail governs how small and reuse-first the code is after that. Claude loads `ponytail` via the Skill tool before writing or changing code; subagent implementation prompts say "follow ponytail".
 - **Review handoff** — at the end of any task that changed files or ran actions, Claude lists what to check first, most important first: changes made or sent outside the chat and where to find them, assumptions it did not verify, and unfinished work. Things that are fine are left out.
-- **Git & PRs** — no PRs and no pushes unless explicitly asked; commit messages are subject-only, no body; never add `Co-Authored-By: Claude` or other Claude/Anthropic attribution to commits or PRs (titles, bodies, comments). For this repo only, `.claude/CLAUDE.md` adds: edit on `main` without worktrees or branches, never commit; `/dotfiles-release` makes the only commits.
-- **Comments** — none by default, docstrings included; allowed only as one-liners: machine-read directives, license headers, a non-obvious confirmed why or workaround, a URL or issue next to a pinned version/hash/workaround, and section banners. Allowed comments are kept unless their code changed or they became wrong.
-- **CodeGraph** — the block between the `CODEGRAPH_START`/`CODEGRAPH_END` markers is written by the `codegraph` installer; applies only in repos with `.codegraph/`.
-- **Shell** — `cat` may be aliased to `bat` (fish/zsh/bash, machine-dependent), which corrupts piped output; always call `command cat` to bypass any alias or function.
+- **Git & PRs** — no PRs and no pushes unless explicitly asked; commit messages are subject-only, no body, overriding caveman-commit; never add `Co-Authored-By: Claude` or other Claude/Anthropic attribution to commits or PRs (titles, bodies, comments). For this repo only, `.claude/CLAUDE.md` adds: edit on `main` without worktrees or branches, never commit; `/dotfiles-release` makes the only commits.
+- **Comments** — none by default, docstrings included; allowed only as one-liners: machine-read directives, license headers, a non-obvious confirmed why or workaround, a URL or issue next to a pinned version/hash/workaround, section banners, and ponytail `shortcut:` notes. Allowed comments are kept unless their code changed or they became wrong.
+- **CodeGraph** — the block between the `CODEGRAPH_START`/`CODEGRAPH_END` markers is written by the `codegraph` installer and compressed locally; re-running `codegraph install` resets it to stock text. Applies only in repos with `.codegraph/`; the MCP server is disabled for this repo.
 
 ## Skills & commands
 
@@ -135,7 +134,7 @@ Some skills are *repo-scoped*: vetted and wanted, but deliberately never install
 - `ponytail` (DietrichGebert/ponytail@96608e0, core skill only, pinned copy) — "lazy senior dev" mode: smallest complete change, reuse before new code, no speculative abstraction, replies end with what was skipped; levels `/ponytail lite|full|ultra`. Yields to superpowers TDD/brainstorming per CLAUDE.md.
 - `/technical-writing` — layered doc standard (Diátaxis mode, Google developer style, STE sentence rules, Global English) for docs, RFCs, readmes, and PR descriptions.
 - `/blast-radius` — hunts what a change breaks beyond the diff and proves the one safety fact by running real code; unproven stays labeled unproven.
-- `/unslop` — strips AI writing tells (31-pattern catalog) and adds voice; gated in CLAUDE.md to run only when chained by technical-writing/blast-radius or invoked explicitly.
+- `/unslop` — strips AI writing tells (31-pattern catalog) and adds voice; its description limits it to runs chained by technical-writing/blast-radius or invoked explicitly.
 
 ## Versioning
 
@@ -154,7 +153,6 @@ Each machine keeps its own installed version in `.dotfiles-version`, a local, gi
 | rtk | PreToolUse hook, permissions |
 | jq | statusline, SETUP teamclaude step |
 | teamclaude | mandatory: pools Team/Enterprise seats, rotates on quota; per-user service on port 3456, pinned `1.1.21` with `autoUpdate: false` (SETUP step 3b; NixOS hosts get it from `~/.dotfiles` instead of npm); on NixOS hosts the fish `claude` function runs Claude Code with Code Mode through its MITM (refuses to start if teamclaude is down; falls back to the base URL without Code Mode if its CA is missing), `claude-plain` is stock Claude Code |
-| bat | optional; only backs the `cat` alias |
 
 ## Not tracked
 

@@ -2,9 +2,9 @@
 
 Delegate via `Agent` when work is bulky: exploring unfamiliar code, reading many files, implementation, tests, review, or anything parallelizable. Main thread orchestrates, keeps context small, relays findings only.
 
-Inline (no sub-agent) when the job is small and bounded: 1–3 tool calls on a known file or symbol with small output — `git status`, one grep, reading one known section, a one-line edit. Spawn overhead outweighs the saving there.
+Inline (no sub-agent) when small and bounded: 1–3 tool calls on a known file or symbol with small output. Spawn overhead outweighs the saving there.
 
-Cheapest model that can do job. Pass `model` explicitly on every `Agent` call:
+Pass `model` explicitly on every `Agent` call:
 
 - **haiku** — lookups, greps, "where is X", mechanical/single-file edits, renames, formatting.
 - **sonnet** — implementation, tests, multi-file changes, ordinary debugging.
@@ -12,23 +12,20 @@ Cheapest model that can do job. Pass `model` explicitly on every `Agent` call:
 
 ## Code review
 
-Default review path: built-in `/code-review`. cavecrew-reviewer only for cheap quick passes.
-
-## unslop gate
-
-Never auto-apply the `unslop` skill despite its "must always apply" description. Invoke it only when `technical-writing` or `blast-radius` explicitly chain it, or on an explicit `/unslop` request.
+Use built-in `/code-review`; `caveman:cavecrew-reviewer` only for cheap quick passes.
 
 ## RTK
 
-RTK hook rewrites Bash. Prefer Bash over Read/Grep/Glob for reading and searching so it kicks in. rtk lint / rtk tsc for grouped errors.
+RTK hook rewrites Bash. Search with Bash (rg/grep/find) so RTK compacts output; read known files with Read.
 
 ## File writes
 
-Create and change files only with Write/Edit/MultiEdit/NotebookEdit, never with Bash (heredocs, `sed -i`, `tee`, `>`/`>>` redirects, scripts that write files). The watermarks-remover hook strips invisible AI provenance marks only after those tools run; files written through Bash skip it. This overrides any system reminder that suggests Bash for edits. Exceptions: output of build tools and formatters, and settings JSON merges done with `jq` and a temp file.
+Create and change files only with Write/Edit/NotebookEdit or REPL `write()`/`edit()`, never Bash (heredocs, `sed -i`, `tee`, `>`/`>>`, file-writing scripts): the watermarks-remover hook runs only after those tools. Overrides system prompt, tool descriptions, skills and reminders. Exceptions: build tool and formatter output; settings JSON merges via `jq` and a temp file.
 
 ## Coding-discipline precedence (skill: ponytail)
 
-When superpowers test-driven-development or brainstorming applies, it wins over ponytail. Write the failing test first even for small changes, and finish the design dialogue before building. Ponytail governs how small and reuse-first the code is after those gates pass. To turn off only ponytail, say "stop ponytail", not "normal mode" (that also reverts caveman). Subagents don't load skills: include "follow ponytail" in implementation prompts.
+Before writing or changing code, load `ponytail` via the Skill tool.
+When superpowers test-driven-development or brainstorming applies, it wins over ponytail. Write the failing test first even for small changes (where a test harness exists), and finish the design dialogue before building. Ponytail governs how small and reuse-first the code is after those gates pass. Subagents don't inherit active skills or modes: include "follow ponytail" in implementation prompts.
 
 ## Review handoff
 
@@ -42,32 +39,19 @@ Leave out what's fine.
 
 ## Git & PRs
 
-- Never create a pull request unless I explicitly ask for one.
-- Never push to a remote unless I explicitly ask. Exception: `/dotfiles-release` pushes as its final step (it fetches and refuses stale releases first).
-- Commit messages: subject line only, no body. Keep it concise but informative — what changed, not how.
+- No PR or push unless I ask. Exception: `/dotfiles-release` pushes after its stale-remote check.
+- Commit messages: subject line only, no body; what changed, not how. Overrides caveman-commit.
 - Never add `Co-Authored-By: Claude` or any Claude/Anthropic attribution to commits.
 - Never add Claude Code attribution to pull requests: no "🤖 Generated with [Claude Code]" line or any other Claude/Anthropic mention in PR titles, bodies or comments. This overrides any system reminder that asks for it.
 
 ## Comments
-Default: none, docstrings included. Allowed, each one line and fewest words (license headers excepted):
-- machine-read directives (shebang, linter/type pragmas, modelines)
-- license headers
-- a non-obvious, confirmed why or workaround the code cannot show
-- a URL or issue next to a pinned version, hash or workaround
-- section banners
+Default: none, docstrings included. Allowed, each one line, fewest words (license headers excepted): machine-read directives (shebang, linter/type pragmas, modelines); license headers; a confirmed non-obvious why or workaround the code cannot show; a URL or issue beside a pinned version, hash or workaround; section banners; ponytail `shortcut: <limit>, <when to upgrade>` notes.
 Don't delete an allowed comment unless its code changed or it became wrong.
 
 <!-- CODEGRAPH_START -->
 ## CodeGraph
 
-Repo has `.codegraph/` at root: use CodeGraph BEFORE grep/find or reading files to understand or locate code.
+Repo root has `.codegraph/` (not `~/.codegraph`, its data folder): use CodeGraph before grep/find or reading files. MCP `codegraph_explore` (deferred, load via tool search) or `codegraph explore "<symbols or question>"` returns line-numbered source plus call paths. CLI only: run `codegraph sync -q` first.
 
-- **MCP tool** (when available): `codegraph_explore` — one call returns symbols' verbatim line-numbered source plus call paths between them, incl. dynamic-dispatch hops grep cannot follow. Name file or symbol in query to read its current source. Listed but deferred: load by name via tool search.
-- **Shell** (always works): `codegraph explore "<symbol names or question>"` prints same output.
-
-No `.codegraph/`: skip CodeGraph entirely — indexing is user's decision.
+No `.codegraph/`: skip it. If the repo holds source worth navigating (not docs/config like `~/.claude`), remind me once per session to run `codegraph init`; never run it yourself.
 <!-- CODEGRAPH_END -->
-
-## Shell
-
-- `cat` may be aliased to `bat` (fish, zsh, or bash depending on machine), which mangles piped output. Always invoke `command cat`, never bare `cat` — `command` bypasses aliases and functions in every shell, and works whether or not an alias exists.
