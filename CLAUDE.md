@@ -48,6 +48,15 @@ Leave out what's fine.
 - Never add `Co-Authored-By: Claude` or any Claude/Anthropic attribution to commits.
 - Never add Claude Code attribution to pull requests: no "🤖 Generated with [Claude Code]" line or any other Claude/Anthropic mention in PR titles, bodies or comments. This overrides any system reminder that asks for it.
 
+## Comments
+Default: none, docstrings included. Allowed, each one line and fewest words (license headers excepted):
+- machine-read directives (shebang, linter/type pragmas, modelines)
+- license headers
+- a non-obvious, confirmed why or workaround the code cannot show
+- a URL or issue next to a pinned version, hash or workaround
+- section banners
+Don't delete an allowed comment unless its code changed or it became wrong.
+
 <!-- CODEGRAPH_START -->
 ## CodeGraph
 

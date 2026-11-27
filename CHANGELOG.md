@@ -2,6 +2,10 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v35 — 2026-11-27
+
+Added a "Comments" section to global `CLAUDE.md`: default is no comments, docstrings included. Allowed, one line each: machine-read directives (shebang, linter/type pragmas, modelines), license headers, a non-obvious confirmed why or workaround, a URL or issue next to a pinned version/hash/workaround, and section banners. Allowed comments stay unless their code changed or they became wrong. README CLAUDE.md-conventions summary gains a matching bullet. No settings, plugin, skill, or hook changes.
+
 ## v34 — 2026-11-24
 
 Removed billion-context and the `claude-cm` fish function (both shipped by `~/.dotfiles` on NixOS hosts). The fish `claude` function now runs Claude Code with experimental Code Mode through `HTTPS_PROXY` to teamclaude's own MITM on `127.0.0.1:3456`, trusting its CA (`~/.config/teamclaude-ca.pem`) via `NODE_EXTRA_CA_CERTS`; it refuses to start while teamclaude is down and falls back to teamclaude's base URL without Code Mode if the CA is missing. `claude-plain` is unchanged. Added `autoCompactWindow: 400000` to `settings.json` (auto-compact budgets against 400K instead of the 1M window, for every launch). SETUP.md routing note gains an upgrade line for v31–v33 checkouts (switch `~/.dotfiles`, relaunch open sessions) and the teamclaude verify step gains a MITM/CA check on NixOS hosts. README external-tools table drops the billion-context row and documents the new `claude` route plus the `autoCompactWindow` setting. Skill `context-audit` now checks `autoCompactWindow` (top level and per-model), `CLAUDE_CODE_AUTO_COMPACT_WINDOW` and `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` instead of the obsolete `autocompact_percentage_override`. skill-scout stack-fit notes updated for the single teamclaude MITM route.
