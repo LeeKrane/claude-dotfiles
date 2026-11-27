@@ -21,11 +21,11 @@ installed or enabled only in the projects that want it, one of two ways:
 `/repo-skills` (`skills/repo-skills/SKILL.md`) reads this file, matches each
 entry's Signals against the current project, and applies Enable for whatever
 the user approves. `skill-scout` appends entries here whenever a candidate's
-verdict is **project-scope** (its step 10) — vetted, wanted, never global.
+placement is **Repo skill** (its step 5) — vetted, wanted, never global.
 
 Fields per entry, one per line: Type (skill | plugin | mcp), Path (subdir of
 the source holding the installable skill; `.` = repo root), Depends, Requires (optional; other registry entries `/repo-skills` installs alongside, before this one), What,
-Signals, Global state, Source, Pin, Vetted, Enable (for `plugin` type: a literal `enabledPlugins` or `skillOverrides` JSON fragment; otherwise prose naming the exact install action), Cost, Refresh, Setup (optional; integration items from skill-scout's step 10 as sub-bullets tagged `config:` — a literal JSON fragment `/repo-skills` merges into `<project>/.claude/settings.local.json` — or `manual:` — dependencies, env var names, CLAUDE.md line, smoke test, shown as follow-ups, never run).
+Signals, Global state, Source, Pin, Vetted, Enable (for `plugin` type: a literal `enabledPlugins` or `skillOverrides` JSON fragment; otherwise prose naming the exact install action), Cost, Refresh, Setup (optional; integration items from skill-scout's step 5 as sub-bullets tagged `config:` — a literal JSON fragment `/repo-skills` merges into `<project>/.claude/settings.local.json`, hooks included — `claude-md:` — one line `/repo-skills` appends to `<project>/CLAUDE.md` — or `manual:` — dependencies, env var names, smoke test, shown as follow-ups, never run).
 
 ## video-shotcraft
 

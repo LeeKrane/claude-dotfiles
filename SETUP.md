@@ -124,7 +124,7 @@ After an update run, review the diff before committing — skills are re-vetted 
 
 `skills/ponytail/` is a pinned copy of DietrichGebert/ponytail@96608e0 (core skill only), not a CLI install. Do not re-install it with `npx skills` or the ponytail plugin marketplace: the plugin brings hooks this setup deliberately skips (see CHANGELOG v27).
 
-skill-scout's Find stage also calls `npx skills find <term>` (same CLI, already covered above) and, for higher-volume search, the findskills.org API. Optionally set `FINDSKILLS_API_KEY` (free key via `npx findskills auth` or findskills.org/developers) — without it, Find still works but findskills allows only one guest query per run before rate-limiting.
+skill-scout's search calls `npx skills find <term>` (same CLI, already covered above) and, when `FINDSKILLS_API_KEY` is set (free key via `npx findskills auth` or findskills.org/developers), the findskills.org API.
 
 ## 6c. Repo-scoped skills
 
