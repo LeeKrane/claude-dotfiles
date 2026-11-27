@@ -45,8 +45,10 @@ Leave out what's fine.
 - Never add Claude Code attribution to pull requests: no "🤖 Generated with [Claude Code]" line or any other Claude/Anthropic mention in PR titles, bodies or comments. This overrides any system reminder that asks for it.
 
 ## Comments
-Default: none, docstrings included. Allowed, each one line, fewest words (license headers excepted): machine-read directives (shebang, linter/type pragmas, modelines); license headers; a confirmed non-obvious why or workaround the code cannot show; a URL or issue beside a pinned version, hash or workaround; section banners; ponytail `shortcut: <limit>, <when to upgrade>` notes.
-Don't delete an allowed comment unless its code changed or it became wrong.
+None by default, docstrings included. Allowed, one line, fewest words (license headers excepted): machine-read directives (shebang, lint/type pragmas, modelines); license headers; URL or issue beside a pinned version, hash or workaround; section banners.
+No comment justifying a workaround or shortcut: fix the cause or add a check (lint, test, type, assert) that fails at the limit; else say so in the reply.
+Repeated agent mistake: make it impossible by design, else lint/test/type, else hook; prose last. Delete bad examples.
+Keep allowed comments unless their code changed or they became wrong.
 
 <!-- CODEGRAPH_START -->
 ## CodeGraph

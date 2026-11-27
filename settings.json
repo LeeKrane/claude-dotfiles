@@ -2,7 +2,9 @@
   "env": {
     "BASH_MAX_OUTPUT_LENGTH": "150000",
     "WATERMARKS_HOOK_MODE": "clean",
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "DO_NOT_TRACK": "1",
+    "CLAUDE_CODE_ENABLE_EXPERIMENTAL_ADVISOR_TOOL": "1"
   },
   "permissions": {
     "allow": [
@@ -32,8 +34,9 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
-  "autoCompactWindow": 400000,
+  "model": "sonnet",
+  "advisorModel": "opus",
+  "autoCompactWindow": 300000,
   "outputStyle": "Concise",
   "hooks": {
     "SessionStart": [

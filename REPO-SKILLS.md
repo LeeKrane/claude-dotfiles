@@ -394,3 +394,39 @@ Signals, Global state, Source, Pin, Vetted, Enable (for `plugin` type: a literal
 - Refresh: re-run skill-scout on the source, diff against Pin, re-apply the local edit, bump Pin
 - Setup:
   - manual: kranetic keeps secrets in SOPS; tell wizard where values go (SOPS file, not `.env`) before it writes stages. The `block-env-access` hook stops the agent from reading `.env` during scoping; point it at `.env.example` instead
+
+## playwright-cli
+
+- Type: skill (subdir of a CLI repo)
+- Path: `skills/playwright-cli`
+- Depends: `npm i -g @playwright/cli@latest` (provides `playwright-cli`), browsers via `playwright-cli install` or `npx playwright install chromium`
+- What: drive a real browser from the shell (open, snapshot, click, fill, screenshot, network, sessions) so the agent can inspect and test a UI; token-leaner than Playwright MCP per its README
+- Signals: frontend or web app (`package.json` with a UI framework, `index.html`, `vite.config.*`, `next.config.*`); user asks to check, test or screenshot the UI
+- Global state: not installed globally, not vendored into this repo
+- Source: https://github.com/microsoft/playwright-cli
+- Pin: `dc5f4d5616ab5a28ded12fd7101a4d49bd59a820` (v0.1.25)
+- Vetted: 2026-11-27, skill-scout. SkillSpector `--no-llm` 100/CRITICAL, 26 hits, all false positives (`.npmrc` strings in `.gitignore` and a test, YARA "info stealer" on extension prose, session-state docs, unpinned `npx` examples); scan covered 36 of 38 files. Manual read: no exfiltration, hidden exec or anti-refusal text
+- Enable: shallow-fetch Pin and copy `skills/playwright-cli` into `<project>/.claude/skills/playwright-cli` (fast path: copy from the vetted clone `~/.cache/skill-scout/2026-11-27/playwright-cli` if its HEAD equals Pin and its tree is clean); alternative `playwright-cli install --skills` in the project installs the CLI's bundled, unpinned copy
+- Cost: 0 always-on until enabled; on invocation SKILL.md ≈4k tok
+- Refresh: re-run skill-scout on upstream, diff against Pin, bump Pin
+- Setup:
+  - manual: `npm i -g @playwright/cli@latest`, then smoke test `playwright-cli open https://example.com` and `playwright-cli snapshot`
+  - manual: prefer Claude in Chrome instead for pages that need your logged-in session
+
+## security-audit
+
+- Type: skill (subdir of a skill repo)
+- Path: `skills/security-audit`
+- Depends: Node (validators `validate-findings.cjs`, `validate-coverage-ledger.cjs`); parallel sub-agents; an OS-enforced sandbox to execute target code, else leads end as `needs_validation`
+- What: Cloudflare's multi-phase whole-repo security audit (recon, hunting across attack classes, fresh-agent validation, schema-checked `findings.json`, re-verification, reports); guidance-only unless a full audit is explicitly requested
+- Signals: user asks for a security audit, pen-test or vulnerability sweep of a whole repo or subsystem; repos with auth, multi-tenant data, LLM/agent features, IaC or a release pipeline
+- Global state: not installed globally, not vendored into this repo
+- Source: https://github.com/cloudflare/security-audit-skill (blog: https://blog.cloudflare.com/build-your-own-vulnerability-harness); not in `cloudflare/skills`
+- Pin: `c1c8a8c1471069fb0e188eeaff69b8e8db6564a8`
+- Vetted: 2026-11-27, skill-scout. SkillSpector `--no-llm` 86, 13 hits, all false positives (defensive audit prose such as memory-poisoning hunting prompts, `/etc/passwd` strings in test fixtures). Validators grepped: no child_process or network use
+- Enable: shallow-fetch Pin and copy `skills/security-audit` into `<project>/.claude/skills/security-audit` (fast path: copy from the vetted clone `~/.cache/skill-scout/2026-11-27/security-audit-skill` if its HEAD equals Pin and its tree is clean)
+- Cost: 0 always-on until enabled; invocation SKILL.md ≈5.5k tok, reference files ≈150 KB loaded per phase; full audit is very token-heavy and Cloudflare recommends repeated runs
+- Refresh: re-run skill-scout on upstream, diff against Pin, bump Pin
+- Setup:
+  - claude-md: Full security audit: use the security-audit skill only on explicit request, with opus for hunter and verifier sub-agents.
+  - manual: reports land in `~/security-audit-skill/<repo>/run-N` by default; complements `security-guidance` hooks and `/security-review`, does not replace them
