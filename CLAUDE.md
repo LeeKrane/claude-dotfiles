@@ -40,7 +40,7 @@ Leave out what's fine.
 ## Git & PRs
 
 - No PR or push unless I ask. Exception: `/dotfiles-release` pushes after its stale-remote check.
-- Commit messages: subject line only, no body; what changed, not how. Overrides caveman-commit.
+- Commit messages: subject line only, no body; what changed, not how; start with a lowercase verb (add, remove, apply, fail, allow, dedupe, bundle, ...). Overrides caveman-commit.
 - Never add `Co-Authored-By: Claude` or any Claude/Anthropic attribution to commits.
 - Never add Claude Code attribution to pull requests: no "🤖 Generated with [Claude Code]" line or any other Claude/Anthropic mention in PR titles, bodies or comments. This overrides any system reminder that asks for it.
 
@@ -48,6 +48,7 @@ Leave out what's fine.
 None by default, docstrings included. Allowed, one line, fewest words (license headers excepted): machine-read directives (shebang, lint/type pragmas, modelines); license headers; URL or issue beside a pinned version, hash or workaround; section banners.
 No comment justifying a workaround or shortcut: fix the cause or add a check (lint, test, type, assert) that fails at the limit; else say so in the reply.
 Repeated agent mistake: make it impossible by design, else lint/test/type, else hook; prose last. Delete bad examples.
+New check: see it fail on the bug it targets before trusting it. Failing check: fix the code, never loosen the check.
 Keep allowed comments unless their code changed or they became wrong.
 
 <!-- CODEGRAPH_START -->

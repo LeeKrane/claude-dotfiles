@@ -2,6 +2,10 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v39 — 2026-11-28
+
+`CLAUDE.md` Git & PRs: commit messages must start with a lowercase verb (add, remove, apply, fail, allow, dedupe, bundle). `CLAUDE.md` Comments: new rule that a new check must be seen failing on the bug it targets and a failing check is fixed in code, never loosened (from the formal-verification video). `REPO-SKILLS.md` gained repo-scoped entry `create-formal-verification-skill` (pstack in cursor/plugins), pinned and vetted 2026-11-27; nothing installs globally. README and SETUP updated to match. No settings, plugin, hook or MCP changes.
+
 ## v38 — 2026-11-27
 
 Main model switched to Sonnet with an Opus advisor: `settings.json` `model` `opus[1m]` to `sonnet` (Sonnet 5.5, native 1M context), new `advisorModel: "opus"`, and `env` `CLAUDE_CODE_ENABLE_EXPERIMENTAL_ADVISOR_TOOL=1`, because `/advisor` sits behind a server feature flag that `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` and `DO_NOT_TRACK` stop Claude Code from fetching. Added `env` `DO_NOT_TRACK=1` (turns off Impeccable telemetry and other tools that honor it). `autoCompactWindow` 400000 to 300000. Updated plugin `impeccable@impeccable` from 4.3.1 to 4.11.1 (`claude plugin marketplace update impeccable`, then `claude plugin update impeccable@impeccable`; restart). Comments rule in `CLAUDE.md` rewritten after Lauren Tan's "All Code Is Slop (Except Mine)": dropped the "non-obvious why or workaround" and ponytail `shortcut:` allowances; justification comments are banned in favor of a failing check (lint, test, type, assert) or a note in the reply; repeated agent mistakes go design, then lint/test/type, then hook, prose last. Skill `ponytail` (self-authored) now asks for an enforceable guard instead of a `shortcut:` comment. `REPO-SKILLS.md` gained repo-scoped entries `playwright-cli` (microsoft/playwright-cli) and `security-audit` (cloudflare/security-audit-skill), both pinned and vetted 2026-11-27; nothing installs globally. README and SETUP updated to match. No hook, MCP or marketplace changes.

@@ -430,3 +430,21 @@ Signals, Global state, Source, Pin, Vetted, Enable (for `plugin` type: a literal
 - Setup:
   - claude-md: Full security audit: use the security-audit skill only on explicit request, with opus for hunter and verifier sub-agents.
   - manual: reports land in `~/security-audit-skill/<repo>/run-N` by default; complements `security-guidance` hooks and `/security-review`, does not replace them
+
+## create-formal-verification-skill
+
+- Type: skill (subdir of a plugin repo)
+- Path: `pstack/skills/create-formal-verification-skill`
+- Depends: tool chosen per target; TLA+ default needs Java and TLC (the optional `statechart` skill installs them via mise on first run, needs network, Node 22.18+); Kani for Rust
+- What: pstack skill that picks the highest-stakes promise in a repo, formally verifies it (TLA+, Kani/prover, or generated-input tests, saying which) and leaves a one-command project verify skill recording covered files and last-checked commit; manual only (`disable-model-invocation`), beta; optional companions `maintain-formal-verification-skill` (upkeep) and `statechart` (readable counterexamples)
+- Signals: repo with concurrency, retries, payments, sync, state machines, parsers or unsafe code where tests miss the breaking case; user asks for proofs, model checking or formal verification
+- Global state: not installed globally, not vendored into this repo
+- Source: https://github.com/cursor/plugins (video: https://www.youtube.com/watch?v=bQCBfcZZj0Y)
+- Pin: `b7b93c36be9bcc36a74db438e0fd385d660bc559`
+- Vetted: 2026-11-27, skill-scout. SkillSpector `--no-llm` 0 issues, SAFE (skill dir only; companions not scanned); SKILL.md read: no network, exec, credentials or anti-refusal text
+- Enable: shallow-fetch Pin and copy `pstack/skills/create-formal-verification-skill` into `<project>/.claude/skills/create-formal-verification-skill` (fast path: copy from the vetted clone `~/.cache/skill-scout/2026-11-27/plugins` if its HEAD equals Pin and its tree is clean); copy `maintain-formal-verification-skill` and `statechart` the same way only if wanted (scan them first)
+- Cost: 0 always-on until enabled; SKILL.md ≈5.6 KB; running it is token-heavy and does one rule at a time
+- Refresh: re-run skill-scout on upstream, diff against Pin, bump Pin
+- Setup:
+  - manual: run `/create-formal-verification-skill` aimed at the one promise where a bug costs most; keep existing tests
+  - manual: after it generates a verify skill, add a project CLAUDE.md line: run that verify skill on changes to its covered paths
