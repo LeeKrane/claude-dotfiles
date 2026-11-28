@@ -24,8 +24,9 @@ Create and change files only with Write/Edit/NotebookEdit or REPL `write()`/`edi
 
 ## Coding-discipline precedence (skill: ponytail)
 
-Before writing or changing code, load `ponytail` via the Skill tool.
-When superpowers test-driven-development or brainstorming applies, it wins over ponytail. Write the failing test first even for small changes (where a test harness exists), and finish the design dialogue before building. Ponytail governs how small and reuse-first the code is after those gates pass. Subagents don't inherit active skills or modes: include "follow ponytail" in implementation prompts.
+Before writing or changing code, load `ponytail` via the Skill tool. Skip skill loads for pure Q&A and read-only lookups.
+When superpowers test-driven-development or brainstorming applies, it wins over ponytail. Write the failing test first even for small changes (where a test harness exists), and finish the design dialogue before building. Ponytail governs how small and reuse-first the code is after those gates pass.
+Skill order: new behavior, brainstorming then writing-plans; code change, test-driven-development then ponytail; bug, systematic-debugging then ponytail; done claim, verification-before-completion.
 
 ## Review handoff
 

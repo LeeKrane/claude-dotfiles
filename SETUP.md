@@ -27,7 +27,7 @@ Then copy back from the backup anything the user wants to keep (`.credentials.js
 
 | Tool | Purpose | Install | Verify |
 |---|---|---|---|
-| jq | statusline, `.env` block hook | `sudo dnf install jq` (Debian: `apt install jq`) | `jq --version` |
+| jq | statusline, `.env` block hook, ponytail hooks | `sudo dnf install jq` (Debian: `apt install jq`) | `jq --version` |
 | rtk | PreToolUse hook, permissions | no distro package — install from https://github.com/rtk-ai/rtk releases (or its install script) into PATH | `rtk --version` |
 | codegraph | UserPromptSubmit hook, MCP server | project's own installer (see its repo/docs); installs a `~/.local/bin/codegraph` symlink; update later with `codegraph upgrade` | `codegraph --version` |
 | Nerd Font | optional; statusline cache-glyph (flame U+F0238) renders as tofu without one | install any Nerd Font and set it as the terminal font | — |
@@ -136,6 +136,8 @@ skill-scout's search calls `npx skills find <term>` (same CLI, already covered a
 jq --version && rtk --version && codegraph --version
 bash ~/.claude/hooks/test-block-env-access.sh   # prints ALL PASS
 bash ~/.claude/hooks/test-patch-claude-mem-quota.sh   # prints ALL PASS
+bash ~/.claude/hooks/test-require-ponytail.sh   # prints ALL PASS
+bash ~/.claude/hooks/test-inject-ponytail-agent.sh   # prints ALL PASS
 teamclaude status
 claude mcp list
 claude plugin list
