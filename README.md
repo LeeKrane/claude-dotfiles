@@ -8,7 +8,8 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 |---|---|
 | `CLAUDE.md` | Global instructions loaded into every session |
 | `settings.json` | Permissions, hooks, model, statusline, plugins |
-| `statusline-command.sh` | Statusline script (model, context fill, 5h/7d limits with ↻ reset times, pace-aware 7d color, prompt-cache flame/snowflake) |
+| `statusline-command.sh` | Statusline script (model, context fill with a `┆` mark at 30% (300K autocompress), 5h/7d limits with ↻ reset times, pace-aware 7d color, prompt-cache flame/snowflake) |
+| `output-styles/minimal.md` | Custom `Minimal` output style selected by `outputStyle` in `settings.json` (self-authored) |
 | `hooks/block-env-access.sh` | PreToolUse Bash hook that blocks commands touching `.env` files (self-authored) |
 | `hooks/test-block-env-access.sh` | Test for that hook: `bash ~/.claude/hooks/test-block-env-access.sh` prints `ALL PASS` |
 | `hooks/require-ponytail.sh`, `hooks/inject-ponytail-agent.sh` | PreToolUse hooks: deny code-file edits until `ponytail` is loaded; append a ponytail line to subagent prompts (self-authored; tests `test-require-ponytail.sh`, `test-inject-ponytail-agent.sh` print `ALL PASS`) |
@@ -58,7 +59,7 @@ Personal global configuration for Claude Code (`~/.claude`). Clone into `~/.clau
 - `model`: `sonnet` (Sonnet 5.5, native 1M context)
 - `advisorModel`: `opus` (Sonnet executes, Opus 5.5 advises through the server-side advisor tool; Claude Code injects its own when-to-call instructions, so CLAUDE.md has no advisor rule)
 - `autoCompactWindow`: `300000` (auto-compact budgets against 300K, not the 1M window; applies to every launch, `claude-plain` included)
-- `outputStyle`: `Concise` (built-in style: leads with results, skips preamble and narration)
+- `outputStyle`: `Minimal` (custom style in `output-styles/minimal.md`: answers only what was asked, no recaps or background, one `Note:` line max, detail on request)
 - `modelSettings`: pins Opus 5.5 effort to `medium` (its default; set via `/model`; applies when Opus runs as a sub-agent or after `/model opus`)
 - `inputNeededNotifEnabled`, `agentPushNotifEnabled`: both `true`
 - `attribution`: `commit` and `pr` both `""` (no Claude Code co-author trailer on commits, no "Generated with Claude Code" line in PRs)

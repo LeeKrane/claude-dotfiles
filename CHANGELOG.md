@@ -2,6 +2,10 @@
 
 Integer versions. Newest first. Local installed version lives in `.dotfiles-version` (gitignored).
 
+## v41 — 2026-11-28
+
+New custom output style `output-styles/minimal.md` ("Minimal": answer only what was asked, no recaps, one "Note:" line max, full detail on request; CLAUDE.md and caveman voice win over it). `settings.json` `outputStyle` changed from `Concise` to `Minimal`. `.gitignore` whitelists `output-styles/` so the style is tracked. `statusline-command.sh` ctx bar gained a dashed `┆` marker at 30% (the 300K autocompress point of a 1M window). No plugin, MCP or hook changes. Nothing to install on other machines beyond the `git pull`; restart Claude Code to pick up the style.
+
 ## v40 — 2026-11-28
 
 Two new self-authored PreToolUse hooks enforce the ponytail rule, wired in `settings.json` after `block-env-access.sh`. `hooks/require-ponytail.sh` (matcher `Edit|Write|NotebookEdit`) denies edits of code files (extension list plus `Makefile`/`Dockerfile`) until the transcript shows the `ponytail` skill loaded or `/ponytail` typed since the last `/compact`; typing "stop ponytail" or "normal mode" opens the gate; subagent calls and a missing transcript pass. `hooks/inject-ponytail-agent.sh` (matcher `Agent`) appends a ponytail line to prompts of agents that may write code, via `updatedInput` with no permission decision (skips Explore, Plan, claude-code-guide, statusline-setup, investigators, reviewers, `isolation: remote`). Tests `hooks/test-require-ponytail.sh` and `hooks/test-inject-ponytail-agent.sh` print `ALL PASS`. Both hooks need bash and jq (already required). `CLAUDE.md` Coding-discipline precedence: skip skill loads for pure Q&A and read-only lookups, new skill-order line (brainstorming then writing-plans, TDD then ponytail, systematic-debugging then ponytail, verification-before-completion), and the manual "include follow ponytail in subagent prompts" rule is replaced by the injection hook. README (hook table, file table, conventions summary) and SETUP.md (test commands, jq row) updated. Nothing to install on other machines beyond the `git pull`; restart Claude Code to load the hooks.

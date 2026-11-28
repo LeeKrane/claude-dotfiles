@@ -5,7 +5,7 @@
 #        prompt-cache freshness (flame/snowflake).
 #
 # Example output:
-#   Fable | ctx [█░░░░░░░░░] 12% | 5h [██░░░░░░░░] 23% ↻ 15:00 | 7d: 41% ↻ Do 15:00 | 󰈸
+#   Fable | ctx [█░░┆░░░░░░░] 12% | 5h [██░░░░░░░░] 23% ↻ 15:00 | 7d: 41% ↻ Do 15:00 | 󰈸
 #
 # NOTE: the "ctx" segment (`.context_window.used_percentage`) is how full the
 # model's context window is THIS turn — it is NOT the Claude.ai account rate
@@ -145,6 +145,7 @@ if [ -n "$used_pct" ]; then
   ctx_pct_display="${ctx_pct_int}%"
   ctx_color=$(severity_color "$ctx_pct_int")
 fi
+ctx_bar="${ctx_bar:0:3}┆${ctx_bar:3}" # 300K autocompress mark at 30% of 1M
 # "ctx" prefix keeps this visually/semantically distinct from the 5h/7d
 # account rate-limit segments below — this is context-window fill, not
 # account usage. Do not drop the prefix.

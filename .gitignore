@@ -20,6 +20,8 @@
 !.claude/CLAUDE.md
 
 !commands/
+!output-styles/
+!output-styles/minimal.md
 !commands/**
 
 !skills/

@@ -211,7 +211,7 @@
       }
     }
   },
-  "outputStyle": "Concise",
+  "outputStyle": "Minimal",
   "modelSettings": {
     "claude-opus-5-5": {
       "effortLevel": "medium"
